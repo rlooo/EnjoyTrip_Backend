@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ taglib
-prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<c:set var="root" value="${pageContext.request.contextPath}"></c:set>
-<%@ include file="/common/header.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -38,268 +37,265 @@ prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
     <!-- End Header -->
 
     <!-- body -->
-    <section class="row">
+    <section id="blog" class="blog mt-3" style="padding-top: 0">
       <div class="title">
         <h2 class="text-center mt-5">지역으로 찾기</h2>
         <p class="text-center mb-5">가고 싶은 여행 지역을 찾아보세요!</p>
       </div>
-
-      <div class="select-box">
-        <div class="row col-md-12 justify-content-center mb-2">
-          <div class="form-group col-md-2">
-            <select class="form-select bg-secondary text-light" id="sido"></select>
-          </div>
-          <div class="form-group col-md-2">
-            <select class="form-select bg-secondary text-light" id="gugun">
-              <option value="">구군선택</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2">
-            <select class="form-select bg-secondary text-light" id="kind">
-              <option value="">전체</option>
-              <option value="12">관광지</option>
-              <option value="14">문화시설</option>
-              <option value="15">행사/공연/축제</option>
-              <option value="25">여행코스</option>
-              <option value="28">레포츠</option>
-              <option value="32">숙박</option>
-              <option value="38">쇼핑</option>
-              <option value="39">음식점</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2">
-            <button type="button" id="list-btn" class="btn btn-outline-dark">
-              여행지정보 가져오기
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="row" id="result-area">
-      <div class="col-md-7 border-2" id="map" style="height: 600px; border: 1px solid white"></div>
-      <div class="col-md-5">
-        <button id="next" type="button" class="btn btn-outline-dark">다음</button>
-        <button id="previous" type="button" class="btn btn-outline-dark">이전</button>
-        <!-- <button id="previous">이전</button>
-      <button id="next">다음</button> -->
-        <div class="container">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>이미지</th>
-                <th>가게이름</th>
-                <th>분류</th>
-                <th>전화번호</th>
-                <th>주소</th>
-              </tr>
-            </thead>
-            <tbody id="location-list"></tbody>
-          </table>
-        </div>
-      </div>
-      <!-- ======= Footer ======= -->
-      <footer id="footer">
-        <div class="container d-lg-flex py-4">
-          <div class="me-lg-auto text-center text-lg-start">
-            <div class="copyright">
-              &copy; Copyright <strong><span>Flexor</span></strong
-              >. All Rights Reserved
-            </div>
-            <div class="credits">
-              <!-- All the links in the footer should remain intact. -->
-              <!-- You can delete the links only if you purchased the pro version. -->
-              <!-- Licensing information: https://bootstrapmade.com/license/ -->
-              <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/flexor-free-multipurpose-bootstrap-template/ -->
-              Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
-          </div>
-          <div class="social-links text-center text-lg-right pt-3 pt-lg-0">
-            <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-            <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-            <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-          </div>
-        </div>
-      </footer>
-      <!-- End Footer -->
-
+	<div class="container">
+		<div id="map" style="width: 100%; min-height: 700px">
+			<div class="row p-2 justify-content-end"
+				style="z-index: 99; position: relative; background: rgba(255, 255, 255, 0.8);">
+				<div class="col-md-2">
+					<select class="form-select" id="select-state">
+						<option value="" disabled selected style="display: none">
+							시/도 선택</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<select class="form-select col-md-3" id="select-region">
+						<option value="" disabled selected style="display: none">
+							구/군 선택</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<select class="form-select" id="select-content">
+						<option value="">전체</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
       <a href="#" class="back-to-top d-flex align-items-center justify-content-center"
         ><i class="bi bi-arrow-up-short"></i
       ></a>
-    </section>
+</section>
 
-    <script>
-      const sido = document.getElementById("sido");
-      const gugun = document.getElementById("gugun");
-      const locations = document.getElementById("location-list");
-      const kind = document.getElementById("kind");
-      const nxtBtn = document.getElementById("next");
-      const prvBtn = document.getElementById("previous");
-      let sidoCode = null;
-      let gugunCode = null;
-      let kindCode = null;
-      let pageNo = 1;
+<script type="text/javascript" src="${root}/assets/js/kakaoMap.js"></script>
+<script>
+const selectState = document.querySelector("#select-state");
+const selectRegion = document.querySelector("#select-region");
+const selectContent = document.querySelector("#select-content");
 
-      let korlist = null;
+const mapContainer = document.getElementById("map");
+const contentList = new Set();
+let map = null;
+let markerList = null;
+let itemList = null;
+let infoList = null;
 
-      window.onload = (function () {
-        fetch("${root}/map?action=loadDo")
-          .then((datalist) => datalist.json())
-          .then((dtolist) => {
-            let list = `<option value="" disabled selected>시도선택</option>`;
-            dtolist.forEach((dto) => {
-              list += `<option value="\${dto.doId}">\${dto.doName}</option>`;
-            });
-            sido.innerHTML = list;
-          });
-      })();
+let locImage = {
+  12: "tour",
+  14: "culture",
+  15: "event",
+  25: "travel",
+  28: "sports",
+  32: "bed",
+  38: "shop",
+  39: "restaurant",
+};
 
-      sido.addEventListener("change", () => {
-        const curCode = sido.options[sido.selectedIndex].value;
-        fetch(`${root}/map?action=loadGugun&areaCode=\${curCode}`)
-          .then((datalist) => datalist.json())
-          .then((dtolist) => {
-            let list = `<option value="" disabled selected>구군선택</option>`;
-            dtolist.forEach((dto) => {
-              list += `<option value="\${dto.gugunCode}">\${dto.name}</option>`;
-            });
-            gugun.innerHTML = list;
-          });
-      });
+let contentName = {
+	12: "관광지",
+	14: "문화시설",
+	15: "행사/공연/축제",
+	25: "여행코스",
+	28: "레포츠",
+	32: "숙박",
+	38: "쇼핑",
+	39: "음식점",
+};
 
-      function getList(sidoCode, gugunCode, kindCode, pageN) {
-        fetch(
-          `${root}/map?action=search&sidoCode=\${sidoCode}&gugunCode=\${gugunCode}&kindCode=\${kindCode}&page=\${pageNo}`
-        )
-          .then((datalist) => datalist.json())
-          .then((dtolist) => {
+// 시,도 데이터로 options 설정
+async function getStateCode() {
+  const items = await fetch("${root}/place?act=area").then((response) => response.json());
+  
+  items.forEach((item) => {
+    const option = document.createElement("option");
+    option.setAttribute("value", item.areaCode);
+    option.textContent = item.areaName;
 
-            if(!dtolist && pageN == 1){
-              alert('검색결과가 없습니다.');
-              return;
-            }
+    selectState.appendChild(option);
+  });
+}
 
-            if(!dtolist) {
-              alert('마지막 페이지입니다.')
-              pageNo = pageN - 1;
-              return;
-            }
-            
-            let viewList = new Array();
-            let content = ``;
-            
-            for (let i = 0; i < dtolist.length; i++) {
-              viewList.push(dtolist[i]);
-            }
-            console.log('line 195')
-            makeList(viewList);
-          });
+// 시,도 선택시 해당 관할 구,군으로 options 설정
+selectState.addEventListener("change", async function () {
+  const items = await fetch("${root}/place?act=sigungu&areaCode="+this.options[this.selectedIndex].value)
+    .then((response) => response.json())
+
+  selectRegion.length = 0;
+  initRegion();
+  initContent();
+  items.forEach((item) => {
+    const option = document.createElement("option");
+    option.setAttribute("value", item.sigunguCode);
+    option.textContent = item.sigunguName;
+
+    selectRegion.appendChild(option);
+  });
+});
+
+// 구,군 선택시 지역내 콘텐츠 지도에 표시
+selectRegion.addEventListener("change", async function () {
+  const items = await fetch("${root}/place?act=contenttype&areaCode="+selectState.options[selectState.selectedIndex].value+"&sigunguCode="+this.options[this.selectedIndex].value)
+    .then((response) => response.json());
+
+  itemList = [];
+  for (let idx = 0; idx < items.length; idx++) {
+    itemList.push({
+      id: idx,
+      contenttypeid: items[idx].contentType,
+    });
+    contentList.add(items[idx].contentType);
+  }
+  
+  initContent();
+  contentList.forEach((contentType) => {
+  	const initOption = document.createElement("option");
+ 	initOption.setAttribute("value", contentType);
+ 	initOption.textContent = contentName[contentType];
+	selectContent.appendChild(initOption);
+  });
+
+  delMarker();
+  closeInfo();
+  infoList = [];
+  showMarker(items);
+});
+
+// 콘텐츠 선택시 해당 콘텐츠를 지도에 표시
+selectContent.addEventListener("change", function () {
+  viewMarker();
+});
+
+// 구,군 tag 초기화
+function initRegion() {
+  const initOption = document.createElement("option");
+  initOption.setAttribute("value", "");
+  initOption.setAttribute("disabled", "disabled");
+  initOption.setAttribute("selected", "selected");
+  initOption.style.display = "none";
+  initOption.textContent = "구/군 선택";
+  selectRegion.appendChild(initOption);
+}
+
+// 콘텐츠 tag 초기화
+function initContent() {
+  selectContent.length = 0;
+  const initOption = document.createElement("option");
+  initOption.setAttribute("value", "");
+  initOption.setAttribute("selected", "selected");
+  initOption.textContent = "전체";
+  selectContent.appendChild(initOption);
+}
+
+// 마커 위치 및 이미지 설정
+function showMarker(items) {
+  markerList = [];
+  const bounds = new kakao.maps.LatLngBounds();
+  items.forEach((item) => {
+    const infoContent = makeInfo(
+      item.title,
+      encodeURI(item.placeImg),
+      item.address,
+      item.zipCode,
+      item.tel
+    );
+
+    const infoWindow = new kakao.maps.InfoWindow({
+      content: infoContent,
+      removable: true,
+    });
+    infoList.push(infoWindow);
+
+    const pos = new kakao.maps.LatLng(Number(item.mapY), Number(item.mapX));
+    const marker = new kakao.maps.Marker({
+      position: pos,
+      title: item.title,
+      clickable: true,
+      image: new kakao.maps.MarkerImage("${root}/assets/img/marker/"+locImage[item.contentType]+".png",
+        new kakao.maps.Size(37, 37)
+      ),
+    });
+    kakao.maps.event.addListener(
+      marker,
+      "click",
+      makeClickListener(marker, infoWindow)
+    );
+    markerList.push(marker);
+    bounds.extend(pos);
+  });
+  viewMarker();
+  setBounds(bounds);
+}
+
+// 포시되는 마커 설정
+function viewMarker() {
+  closeInfo();
+  const contentId = selectContent.options[selectContent.selectedIndex].value;
+  if (itemList) {
+    for (let idx = 0; idx < itemList.length; idx++) {
+      if (itemList[idx].contenttypeid == contentId || contentId === "") {
+        markerList[idx].setMap(map);
+      } else {
+        markerList[idx].setMap(null);
       }
+    }
+  }
+}
 
-      function makeList(views) {
-        while (locations.firstChild) {
-          console.log('remove 202')
-          locations.removeChild(locations.firstChild);
-        }
-        views.forEach((view) => {
-          let tr = document.createElement("tr");
-          tr.setAttribute("data-mapx", view.mapx);
-          tr.setAttribute("data-mapy", view.mapy);
-          let itd = document.createElement("td");
-          let img = document.createElement("img");
-          img.setAttribute("src", view.firstImage == "" ? view.fistImage2 : view.firstImage);
-          img.style.height = "50px";
-          img.style.width = "50px";
-          itd.appendChild(img);
-          let td1 = document.createElement("td");
-          td1.appendChild(document.createTextNode(view.title));
-          let td2 = document.createElement("td");
-          let contype;
-          
-          switch (view.contentType) {
-                case 12:
-                  contype = "관광지";
-                  break;
-                case 14:
-                  contype = "문화시설";
-                  break;
-                case 15:
-                  contype = "행사/공연/축제";
-                  break;
-                case 25:
-                  contype = "여행코스";
-                  break;
-                case 28:
-                  contype = "레포츠";
-                  break;
-                case 32:
-                  contype = "숙박";
-                  break;
-                case 38:
-                  contype = "쇼핑";
-                  break;
-                case 39:
-                  contype = "음식점";
-                  break;
-          }
-          td2.appendChild(document.createTextNode(contype));
+// 지역 수정 시 마커 삭제
+function delMarker() {
+  if (markerList) {
+    markerList.forEach((marker) => {
+      marker.setMap(null);
+    });
+  }
+}
 
-          let td3 = document.createElement("td");
-          td3.appendChild(document.createTextNode(view.tel));
-          let td4 = document.createElement("td");
-          td4.appendChild(document.createTextNode(view.addr1 + " " + view.addr2));
+// 마커 클릭 시 해당 콘텐츠 정보 표시
+function makeClickListener(marker, infoWindow) {
+  return function () {
+	closeInfo(infoList);
+    infoWindow.open(map, marker);
+  };
+}
+// 콘텐츠 정보 표시 tag 설정
+function makeInfo(title, img, addr, zipCode, tel) {
+	if(img == "null"){
+	console.log(img);
+		img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
+	}
+	var contents = `<div style="max-width:400px">
+	    <div class="px-2 py-1 fw-bold fs-5" style="background:#eee">\${title}</div>
+	    <div class="row">
+	    <div class="col-md-5">
+	      <img src=\${img} class="img-thumbnail"/>
+	    </div>
+	    <div class="col-md-7 align-self-center flex-wrap">
+	      <div class="fw-bold text-truncate">\${addr}</div>`;
+	
+	if(zipCode != null){
+		contents += `<div>(우) \${zipCode}</div>`;
+	}else{
+		contents += `<div>(우) 없어요 ㅠㅠ</div>`;
+	}
+	      
+	if(tel != null){
+		contents += `<div>(전화번호) \${tel}</div>`;
+	}else{
+		contents += `<div>(전화번호) 없어요 ㅠㅠ</div>`;
+	}
+  return contents +
+    `</div>
+    </div>
+  </div>`;
+}
 
-          tr.appendChild(itd);
-          tr.appendChild(td1);
-          tr.appendChild(td2);
-          tr.appendChild(td3);
-          tr.appendChild(td4);
-
-          tr.addEventListener("click", function () {
-            console.log(view.mapx + "             " + view.mapy);
-            panTo(view.mapx, view.mapy);
-          });
-
-          locations.appendChild(tr);
-        });
-      }
-
-      document.getElementById("list-btn").addEventListener("click", () => {
-        sidoCode = sido.options[sido.selectedIndex].value;
-        if (sidoCode == "") {
-          alert("시/도를 선택해주세요");
-          return;
-        }
-        gugunCode = gugun.options[gugun.selectedIndex].value;
-        if (gugunCode == "") {
-          alert("구/군을 선택해주세요");
-          return;
-        }
-        kindCode =
-          kind.options[kind.selectedIndex].value == ""
-            ? "0"
-            : kind.options[kind.selectedIndex].value;
-        // kindCode = kindCode == "" ? "0" : kindCode;
-        pageNo = 1;
-
-        getList(sidoCode, gugunCode, kindCode, pageNo);
-      });
-
-      nxtBtn.addEventListener("click", () => {
-        pageNo++;
-        getList(sidoCode, gugunCode, kindCode, pageNo);
-      });
-
-      prvBtn.addEventListener("click", () => {
-        if(pageNo == 1) {
-          alert('첫번쨰 페이지입니다.');
-          return;
-        }
-        pageNo--;
-        getList(sidoCode, gugunCode, kindCode, pageNo);
-      });
-    </script>
-    <script src="${root}/assets/js/map.js"></script>
+getLocation();
+getStateCode();
+initRegion();
+</script>
   </body>
 </html>

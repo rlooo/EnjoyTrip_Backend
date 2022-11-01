@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="root" value="${pageContext.request.contextPath}"></c:set>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 <meta charset="utf-8" />
@@ -67,18 +67,18 @@
 
 			<nav id="navbar" class="navbar">
 				<ul>
-					<li><a id="search-btn" href="${root}/content/search.jsp">지역으로찾기</a></li>
-					<li><a id="route-btn" href="./route.html">나의여행계획</a></li>
-					<li><a id="board-btn" href="./hot_place.html">핫플자랑하기</a></li>
-					<li><a id="board-btn" href="${root}/board?act=list">여행정보공유</a></li>
+					<li><a id="search-btn" href="/content/search">지역으로찾기</a></li>
+					<li><a id="route-btn" href="/content/route">나의여행계획</a></li>
+					<li><a id="board-btn" href="/content/hot_place">핫플자랑하기</a></li>
+					<li><a id="board-btn" href="/board/list">여행정보공유</a></li>
 					<li class="disable islogin" id="logout"><a
-						href="${root}/user?act=logout">로그아웃</a></li>
+						href="/user/logout">로그아웃</a></li>
 					<c:if test="${userinfo eq null}">
-						<li><a id="login-btn" href="${root}/user?act=mvlogin">로그인/회원가입</a></li>
+						<li><a id="login-btn" href="/user/mvlogin">로그인/회원가입</a></li>
 					</c:if>
 					<c:if test="${userinfo ne null}">
-						<li><a href="${root}/user?act=mvaccount">마이페이지</a></li>
-						<li><a href="${root}/user?act=logout">로그아웃</a></li>
+						<li><a href="/user/mvaccount">마이페이지</a></li>
+						<li><a href="/user/logout">로그아웃</a></li>
 					</c:if>
 				</ul>
 				<i class="bi bi-list mobile-nav-toggle"></i>
@@ -284,7 +284,7 @@
 
 	<!-- Modal -->
 
-	<!-- <div class="modal fade" id="myModal">
+	<%-- <div class="modal fade" id="myModal">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div id="modal-description" class="row">
@@ -307,7 +307,7 @@
 
 			</div>
 		</div>
-	</div> -->
+	</div> --%>
 
 	<!-- Vendor JS Files -->
 	<script src="${root}/assets/vendor/aos/aos.js"></script>
@@ -319,6 +319,7 @@
 
 	<!-- Template Main JS File -->
 	<script src="${root}/assets/js/main.js"></script>
+	<script src="${root}/assets/js/smoothScroll.js"></script>
 	<script>
 		const searchBox = document.querySelector('#search-box');
 		const searchBtn = document.querySelector('#search-box > button');
@@ -409,7 +410,6 @@
 			io.observe(target);
 		}
 	</script>
-	<!-- <script defer src="${root}/assets/js/main2.js"></script> -->
 </body>
 
 </html>

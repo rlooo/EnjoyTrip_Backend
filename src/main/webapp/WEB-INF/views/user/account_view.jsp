@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="/common/header.jsp"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <c:if test="${empty user}">
 	<script type="text/javascript">
 		alert("정상적인 URL 접근이 아닙니다.");
@@ -8,7 +8,7 @@
 	</script>
 </c:if>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 <meta charset="UTF-8">
@@ -61,7 +61,7 @@
 	</form>
 
 	<!-- ======= Footer ======= -->
-	<%@ include file="/common/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 	<!-- End Footer -->
 	<script>
 		document.querySelector("#btn-mv-modify").addEventListener("click",

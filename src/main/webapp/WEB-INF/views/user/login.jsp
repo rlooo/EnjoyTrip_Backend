@@ -8,7 +8,7 @@
 </c:if>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -46,15 +46,15 @@
 				<h2 class="form__title">로그인</h2>
 				<input type="text" placeholder="Id" class="input" id="sign-in-id"
 					name="sign-in-id" value="${svid}" />
-				<div class="form-check mb-3 float-end">
-					<input class="form-check-input" type="checkbox" value="ok"
-						id="saveid" name="saveid" ${idck} /> <label
-						class="form-check-label" for="saveid"> 아이디 저장 </label>
-				</div>
 				<input type="password" placeholder="Password" class="input"
 					id="sign-in-password" name="sign-in-password" /> <a
 					href="${root}/user/forgot_password.jsp" class="link"
 					id="btn-forgot-password">Forgot your password?</a>
+        <div class="form-check mb-3 float-end">
+					<input class="form-check-input" type="checkbox" value="ok"
+						id="saveid" name="saveid" ${idck} /> <label
+						class="form-check-label" for="saveid"> 아이디 저장 </label>
+				</div>
 				<button class="btn">로그인</button>
 			</form>
 		</div>
@@ -73,11 +73,11 @@
 	</div>
 
 	<script>
-      const signInBtn = document.getElementById("signIn");
-      const signUpBtn = document.getElementById("signUp");
-      const fistForm = document.getElementById("form1");
-      const secondForm = document.getElementById("form2");
-      const container = document.querySelector(".container :nth-child(2)");
+      const signInBtn = document.querySelector("#signIn");
+      const signUpBtn = document.querySelector("#signUp");
+      const fistForm = document.querySelector("#form1");
+      const secondForm = document.querySelector("#form2");
+      const container = document.querySelector(".container");
 
       signInBtn.addEventListener("click", () => {
         container.classList.remove("right-panel-active");

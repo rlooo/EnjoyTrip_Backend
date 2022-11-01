@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<%@ include file="/common/header.jsp"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 <meta charset="UTF-8">
@@ -41,7 +41,7 @@
 	</div>
 
 	<!-- ======= Footer ======= -->
-	<%@ include file="/common/footer.jsp"%>
+	<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 	<!-- End Footer -->
 	<script>
 	document.querySelector("#btn-ok").addEventListener("click",

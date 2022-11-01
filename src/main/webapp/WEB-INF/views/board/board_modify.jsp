@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-     <%@ include file="/common/header.jsp" %>
-     <c:if test="${empty article}">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
+<c:if test="${empty article}">
 	<script type="text/javascript">
 		alert("정상적인 URL 접근이 아닙니다.");
 		location.href = "${root}/board";
@@ -97,7 +96,7 @@ ${article.content}</textarea>
       <input type="hidden" id="articleno" name="articleno" value="${article.articleNo}">
     </form>
     <!-- ======= Footer ======= -->
-   <%@ include file="/common/footer.jsp" %>
+   <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     <!-- End Footer -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>

@@ -1,6 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> <%@ include
-file="../common/header.jsp"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -84,11 +83,11 @@ file="../common/header.jsp"%>
     </div>
     <c:if test="${userinfo ne null}">
       <div class="bt_wrap">
-        <a href="${root}/board?act=mvwrite" class="on" id="btn-mv-register">등록</a>
+        <a href="/board/mvwrite" class="on" id="btn-mv-register">등록</a>
       </div>
     </c:if>
 
-    <form id="form-no-param" method="get" action="${root}/board">
+    <form id="form-no-param" method="get" action="/board">
       <input type="hidden" id="act" name="act" value="view" />
       <input type="hidden" id="pgno" name="pgno" value="${pgno}" />
       <input type="hidden" id="key" name="key" value="${key}" />
@@ -96,7 +95,7 @@ file="../common/header.jsp"%>
       <input type="hidden" id="articleno" name="articleno" value="" />
     </form>
     <!-- ======= Footer ======= -->
-    <%@ include file="/common/footer.jsp"%>
+    <%@ include file="/WEB-INF/views/common/footer.jsp"%>
     <!-- End Footer -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"
       ><i class="bi bi-arrow-up-short"></i
@@ -112,7 +111,7 @@ file="../common/header.jsp"%>
       });
 
       window.onload = (function () {
-        fetch("${root}/board?act=loadboard");
+        fetch("/board/loadboard");
       })();
     </script>
   </body>

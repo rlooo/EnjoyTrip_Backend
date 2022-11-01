@@ -1,90 +1,67 @@
 package com.ssafy.enjoytrip.board.model;
 
 public class BoardDto {
-	private int articleNo;
-	private String userId;
-	private String subject;
-	private String content;
-	private int hit;
-	private String createdDate;
-	private String modifiedDate;
+    private int articleNo;
+    private String userId;
+    private String title;
+    private String content;
+    private int hit;
+    private String registDate;
+    private int isNotice;
 
-	public BoardDto() {
-		super();
-	}
+    public int getArticleNo() {
+        return articleNo;
+    }
 
-	public BoardDto(int articleNo, String userId, String subject, String content, int hit, String createdDate,
-			String modifiedDate) {
-		super();
-		this.articleNo = articleNo;
-		this.userId = userId;
-		this.subject = subject;
-		this.content = content;
-		this.hit = hit;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
-	}
+    public void setArticleNo(int articleNo) {
+        this.articleNo = articleNo;
+    }
 
-	public int getArticleNo() {
-		return articleNo;
-	}
+    public String getWriter() {
+        return userId;
+    }
 
-	public void setArticleNo(int articleNo) {
-		this.articleNo = articleNo;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setWriter(String userId) {
+        this.userId = userId;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public int getHit() {
+        return hit;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setHit(int hit) {
+        this.hit = hit;
+    }
 
-	public int getHit() {
-		return hit;
-	}
+    public String getRegistDate() {
+        return registDate;
+    }
 
-	public void setHit(int hit) {
-		this.hit = hit;
-	}
+    public void setRegistDate(String registDate) {
+        this.registDate = registDate;
+    }
 
-	public String getCreatedDate() {
-		return createdDate;
-	}
+    public int getIsNotice() {
+        return isNotice;
+    }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public String getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(String modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	@Override
-	public String toString() {
-		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", subject=" + subject + ", content="
-				+ content + ", hit=" + hit + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + "]";
-	}
-
+    public void setIsNotice(int isNotice) {
+        this.isNotice = isNotice;
+    }
 }

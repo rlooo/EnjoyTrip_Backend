@@ -1,21 +1,9 @@
 package com.ssafy.enjoytrip.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class ParameterCheck {
 
 	public static String nullToBlank(String str) {
 		return str == null ? "" : str;
-	}
-
-	public static String urlEncoding(String str) {
-		try {
-			return str == null ? "" : URLEncoder.encode(str, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return "";
-		}
 	}
 
 	public static int notNumberToZero(String str) {

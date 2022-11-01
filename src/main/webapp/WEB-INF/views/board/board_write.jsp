@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ include file="../common/header.jsp" %>
-    <c:if test="${cookie.user_id.value ne null}">
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+<c:if test="${cookie.user_id.value ne null}">
 	<c:set var="idck" value="checked"></c:set>
 </c:if>
 <!DOCTYPE html>
@@ -75,7 +75,7 @@
         </div>
     </div>
 <!-- ======= Footer ======= -->
-   <%@ include file="/common/footer.jsp" %>
+    <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     <!-- End Footer -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
