@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.content.model.mapper.ContentMapper">
+    <resultMap id="area" type="areaDto">
+        <result column="area_code" property="areaCode" />
+        <result column="area_name" property="areaName" />
+    </resultMap>
+
+    <resultMap id="sigungu" type="sigunguDto">
+        <result column="sigungu_code" property="sigunguCode" />
+        <result column="sigungu_name" property="sigunguName" />
+    </resultMap>
+
+    <resultMap id="placeInfo" type="placeDto">
+        <result column="content_id" property="contentId" />
+        <result column="title" property="title" />
+        <result column="address" property="address" />
+        <result column="area_code" property="areaCode" />
+        <result column="sigungu_code" property="sigunguCode" />
+        <result column="content_type_id" property="contentType" />
+        <result column="place_img" property="placeImg" />
+        <result column="place_img_thumbnail" property="placeThumbnail" />
+        <result column="map_x" property="mapX" />
+        <result column="map_y" property="mapY" />
+        <result column="tel" property="tel" />
+        <result column="zipcode" property="zipCode" />
+    </resultMap>
+
+    <select id="getAreaCode" resultMap="area">
+        select *
+        from area
+    </select>
+
+    <select id="getSigunguCode" parameterType="int" resultMap="sigungu">
+        select sigungu_code, sigungu_name
+        from sigungu
+        where area_code = #{areaCode}
+    </select>
+
+    <select id="getPlaceInfo" parameterType="map" resultMap="placeInfo">
+        select *
+        from place_info
+        where area_code = #{areaCode} and sigungu_code = #{sigunguCode}
+    </select>
+</mapper>

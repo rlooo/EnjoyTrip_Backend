@@ -16,10 +16,11 @@ import com.ssafy.enjoytrip.interceptor.ConfirmInterceptor;
 
 @Configuration
 @EnableAspectJAutoProxy
-@MapperScan(basePackages = { "com.ssafy.**.mapper" })
+@MapperScan(basePackages = { "com.ssafy.enjoytrip.**.mapper" })
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-	private final List<String> patterns = Arrays.asList("/board/*", "/admin", "/user/list");
+	// private final List<String> patterns = Arrays.asList("/board/*", "/admin",
+	// "/user/list");
 
 	@Autowired
 	private ConfirmInterceptor confirmInterceptor;
@@ -35,9 +36,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 				.maxAge(1800);
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(confirmInterceptor).addPathPatterns(patterns);
-	}
+	// @Override
+	// public void addInterceptors(InterceptorRegistry registry) {
+	// registry.addInterceptor(confirmInterceptor).addPathPatterns(patterns);
+	// }
 
 }
