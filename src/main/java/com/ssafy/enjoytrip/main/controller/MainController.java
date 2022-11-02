@@ -9,4 +9,29 @@ public class MainController {
     public String index() {
         return "/index";
     }
+
+    @GetMapping("/search")
+    public String mvSearch() {
+        return "/content/search";
+    }
+
+    @GetMapping("/route")
+    public String mvRoute() {
+        return "/content/route";
+    }
+
+    @GetMapping("/mvboard")
+    public String mvBoard() {
+        return "/board/board_list";
+    }
+
+    @GetMapping("/mvlogin")
+    public String mvLogin() {
+        return "/user/login";
+    }
+
+    @GetMapping("/mvaccount")
+    public String mvAccount() {
+        return "/user/account_view";
+    }
 }

@@ -55,17 +55,17 @@
 
       <nav id="navbar" class="navbar">
        <ul>
-					<li><a id="search-btn" href="/content/search">지역으로찾기</a></li>
-					<li><a id="route-btn" href="/content/route">나의여행계획</a></li>
-					<li><a id="board-btn" href="/content/hot_place">핫플자랑하기</a></li>
-					<li><a id="board-btn" href="/board/list">여행정보공유</a></li>
+					<li><a id="search-btn" href="/search">지역으로찾기</a></li>
+					<li><a id="route-btn" href="/route">나의여행계획</a></li>
+					<li><a id="board-btn" href="/hot_place">핫플자랑하기</a></li>
+					<li><a id="board-btn" href="/mvboard">여행정보공유</a></li>
 					<li class="disable islogin" id="logout"><a
 						href="/user/logout">로그아웃</a></li>
 					<c:if test="${userinfo eq null}">
-						<li><a id="login-btn" href="/user/mvlogin">로그인/회원가입</a></li>
+						<li><a id="login-btn" href="/mvlogin">로그인/회원가입</a></li>
 					</c:if>
 					<c:if test="${userinfo ne null}">
-						<li><a href="/user/mvlogin">마이페이지</a></li>
+						<li><a href="/mvlogin">마이페이지</a></li>
 						<li><a href="/user/logout">로그아웃</a></li>
 					</c:if>
 				</ul>

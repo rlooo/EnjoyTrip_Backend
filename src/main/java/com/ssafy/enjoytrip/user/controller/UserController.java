@@ -7,9 +7,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
-    @GetMapping("/mvlogin")
-    public String mvLogin() {
-        return "/user/login";
-    }
 }

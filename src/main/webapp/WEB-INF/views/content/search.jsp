@@ -13,7 +13,6 @@
     <title>Enjoy Trip</title>
 
     <link href="${root}/assets/css/search.css" rel="stylesheet" />
-    <link href="${root}/assets/css/map.css" rel="stylesheet" />
 
     <!-- =======================================================
   * Template Name: Flexor - v4.8.0
@@ -108,7 +107,7 @@ let contentName = {
 
 // 시,도 데이터로 options 설정
 async function getStateCode() {
-  const items = await fetch("${root}/place?act=area").then((response) => response.json());
+  const items = await fetch("/content/getArea").then((response) => response.json());
   
   items.forEach((item) => {
     const option = document.createElement("option");
@@ -121,7 +120,7 @@ async function getStateCode() {
 
 // 시,도 선택시 해당 관할 구,군으로 options 설정
 selectState.addEventListener("change", async function () {
-  const items = await fetch("${root}/place?act=sigungu&areaCode="+this.options[this.selectedIndex].value)
+  const items = await fetch("/content/getSigungu/"+this.options[this.selectedIndex].value)
     .then((response) => response.json())
 
   selectRegion.length = 0;
@@ -138,7 +137,7 @@ selectState.addEventListener("change", async function () {
 
 // 구,군 선택시 지역내 콘텐츠 지도에 표시
 selectRegion.addEventListener("change", async function () {
-  const items = await fetch("${root}/place?act=contenttype&areaCode="+selectState.options[selectState.selectedIndex].value+"&sigunguCode="+this.options[this.selectedIndex].value)
+  const items = await fetch("/content/getPlace/"+selectState.options[selectState.selectedIndex].value+"/"+this.options[this.selectedIndex].value)
     .then((response) => response.json());
 
   itemList = [];
