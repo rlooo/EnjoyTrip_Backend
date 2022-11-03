@@ -42,9 +42,9 @@
           <h2 class="text-center mt-5">내 여행 계회 세우기</h2>
           <p class="text-center mb-5">나만의 여행 계획을 세워보세요!</p>
         </div>
-          <div class="container">
+          <div class="container px-4">
             <div class="row">
-              <div class="col-lg-12">
+              <div class="col-lg-9">
                 <div id="kakaomap" style="width: 100%; min-height: 700px">
                   <div
                     class="row p-2 justify-content-end"
@@ -68,41 +68,41 @@
                   </div>
                 </div>
               </div>
-
-            </div>
-            <div class="text-center my-2">
-                    <h3>여행 계획</h3>
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      id="search-path-btn"
-                    >
-                      경로탐색
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      id="save-plan-btn"
-                    >
-                      저장
-                    </button>
-
-            </div>
-                <div class="sidebar row h-100 d-flex text-center">
+              <div class="col-lg-3">
+                <div class="sidebar row h-100 d-flex text-center justify-content-center">
+                  <div class="sidebar-title">여행 계획</div>
                   <div class="row">
                     <div
-                      class="w-100"
+                      class="w-100 px-1"
                       id="add-place-list"
-                      style="height: 500px; overflow: auto"
+                      style="height: 500px; overflow: auto; overflow-x:hidden"
                     ></div>
                   </div>
                   <div
                     class="d-grid gap-2 px-4 my-3"
                     style="position: absolute; bottom: 0"
                   >
-                    
+                  </div>
+                  <div class="row ms-1 pe-4">
+                    <button
+                      type="button"
+                      class="btn btn-primary my-1"
+                      id="search-path-btn"
+                    >
+                      경로탐색
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary my-1"
+                      id="save-plan-btn"
+                    >
+                      저장
+                    </button>
                   </div>
                 </div>
+              </div>
+
+            </div>
           </div>
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"
           ><i class="bi bi-arrow-up-short"></i
@@ -114,6 +114,7 @@
 const mapContainer = document.getElementById("kakaomap");
 const inputPlace = document.getElementById("place-input");
 const placeSearchBtn = document.getElementById("place-search-btn");
+const placeList = document.getElementById("add-place-list");
 let map = null;
 let markerList = null;
 let infoList = null;
@@ -203,7 +204,7 @@ function makeClickListener(marker, infoWindow, place) {
     document
       .getElementById("add-place-btn")
       .addEventListener("click", function () {
-        const placeList = document.getElementById("add-place-list");
+        // const placeList = document.getElementById("add-place-list");
         let img = encodeURI(place.placeImg);
         if(img == "null"){
           img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
@@ -213,25 +214,30 @@ function makeClickListener(marker, infoWindow, place) {
           tel = "없어요ㅠㅠ";
         }
         let planInfoPlace = `
-          <div class="text-start border p-1 rounded-2 my-1">
+          <div class="text-start border py-1 rounded-2 my-1 placeList-item draggable"
+                draggable="true"
+                ondragstart="handlerDragStart(this)"
+                ondragend="handlerDragEnd(this)">
             <div class="row">
-              <div class="col-md-3">
-                <img src=\${img} class="img-thumbnail"/>
+              <div class="col-md-5 pe-1">
+                <img src=\${img} class="img-fluid"/>
               </div>
-              <div class="col-md">
-                <div class="fw-bold fs-6" id="place-title">
+              <div class="col-md-7 ps-0">
+                <div class="fw-bold text-truncate" id="place-title" style="background:#eee; margin-top:-0.21rem; border-radius:0 0.2rem 0 0; font-size:0.8rem">
                   \${place.title}
                 </div>
-                <div class="">
-                  <div>\${place.address}</div>
-                  <div>\${tel}</div>
-                  <textarea class="form-control my-1" placeholder="Leave a comment here"></textarea>
-                  <div class="row d-flex justify-content-between">
-                    <div class="col-auto" id="info-url" style="color:blue">
+                <div class="mt-1">
+                  <div style="font-size:0.3em">-\${place.address}</div>
+                  <div style="font-size:0.2em">-\${tel}</div>
+                </div>
+              </div>
+              </div class="mx-5">
+                <textarea class="form-control my-1" placeholder="간단 메모" style="font-size: 0.3em"></textarea>
+                <div class="row d-flex justify-content-between align-items-center px-1" style="font-size:0.7em">
+                  <div class="col-auto" id="info-url" style="color:blue">
                     <a href="http://data.visitkorea.or.kr/resource/\${place.contentId}" target="_blank">상세보기</a>
-                    </div>
-                    <button class="col-auto btn btn-sm btn-danger me-3" onclick=delPlaceInfo(this)>삭제</button>
                   </div>
+                  <button class="col-auto btn btn-sm btn-danger me-2" onclick=delPlaceInfo(this) style="font-size:0.7rem">삭제</button>
                 </div>
               </div>
             </div>
@@ -257,10 +263,10 @@ function makeInfo(contentId, title, img, addr, zipCode, tel) {
 	var contents = `<div style="max-width:400px">
 	    <div class="px-2 py-1 fw-bold fs-5" style="background:#eee">\${title}</div>
 	    <div class="row">
-	    <div class="col-md-5">
+	    <div class="col-md-5 pe-0">
 	      <img src=\${img} class="img-thumbnail"/>
 	    </div>
-	    <div class="col-md-7 align-self-center flex-wrap mb-1">
+	    <div class="col-md-7 align-self-center flex-wrap mb-1 ps-1">
 	      <div class="fw-bold text-truncate">\${addr}</div>`;
 	
 	if(zipCode != null){
@@ -284,6 +290,35 @@ function makeInfo(contentId, title, img, addr, zipCode, tel) {
     </div>
   </div>`;
 }
+
+// Place List Item Event
+function handlerDragStart(e){
+  e.classList.add('dragging');
+}
+
+function handlerDragEnd(e){
+  e.classList.remove('dragging');
+}
+
+function getDragAfterEl(box, y){
+  const draggingItems = [...placeList.querySelectorAll('.draggable:not(.dragging)')];
+  return draggingItems.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if(offset < 0 && offset > closest.offset){
+      return {offset: offset, element:child};
+    }else{
+      return closest
+    }
+  }, {offset: Number.NEGATIVE_INFINITY}).element;
+}
+
+placeList.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  const afterEl = getDragAfterEl(placeList, e.clientY);
+  const draggable = document.querySelector('.dragging');
+  placeList.insertBefore(draggable, afterEl);
+})
 
 getLocation();
 </script>
