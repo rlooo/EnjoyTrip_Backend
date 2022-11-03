@@ -1,5 +1,8 @@
 package com.ssafy.enjoytrip.user.model;
 
+import lombok.Data;
+
+@Data
 public class UserDto {
     private String userId;
     private String userName;
@@ -82,5 +85,12 @@ public class UserDto {
     public void setIsManager(int isManager) {
         this.isManager = isManager;
     }
+
+	@Override
+	public String toString() {
+		return "UserDto [userId=" + userId + ", userName=" + userName + ", userPw=" + userPw + ", userAge=" + userAge
+				+ ", emailId=" + emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + ", profileImg="
+				+ profileImg + ", isManager=" + isManager + "]";
+	}
 
 }

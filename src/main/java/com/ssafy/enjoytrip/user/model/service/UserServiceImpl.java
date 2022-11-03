@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registUser(UserDto userDto) throws Exception {
-
+    	userMapper.registUser(userDto);
     }
 
     @Override

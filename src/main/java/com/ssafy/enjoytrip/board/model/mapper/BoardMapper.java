@@ -18,7 +18,7 @@ public interface BoardMapper {
 
     BoardDto getBoard(int articleNo) throws SQLException;
 
-    void updateView(int articleNo) throws SQLException;
+    void updateHit(int articleNo) throws SQLException;
 
     void modifyBoard(BoardDto boardDto) throws SQLException;
 
