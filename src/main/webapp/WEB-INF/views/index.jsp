@@ -39,6 +39,13 @@
 <!-- Template Main CSS File -->
 <link href="${root}/assets/css/style.css" rel="stylesheet" />
 
+<!-- This project default -->
+<script src="https://kit.fontawesome.com/989420847f.js"
+	crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=27e1e8bef9f79b21bbe6735035a00943"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=27e1e8bef9f79b21bbe6735035a00943&libraries=services"></script>
+
 <!-- =======================================================
   * Template Name: Flexor - v4.8.0
   * Template URL: https://bootstrapmade.com/flexor-free-multipurpose-bootstrap-template/
@@ -244,7 +251,7 @@
       </div> -->
 
 	<div id="search-result-container">
-		<div id="search-result" class="row" data-aos="fade-up"></div>
+		<div id="search-result" class="row" data-aos="fade-up" style="overflow-x:hidden; overflow-y:hidden"></div>
 	</div>
 
 	</main>
@@ -329,15 +336,12 @@
 		const mockups = document.getElementsByClassName('mockup');
 		const mockupTitles = document.getElementsByClassName('mockup-title');
 		const logoutBtn = document.getElementById('logout');
-		let isLastPage = false;
 		let curKeyword = '';
-		let page = 1;
+		let curData = '';
 
 		searchBox.addEventListener('submit', function(e){
 			e.preventDefault();
 			// 키워드를 전역변수로 변경
-			isLastPage = false;
-			page = 1;
 			curKeyword = this.children[0].value.trim();
 			if(curKeyword){
 				for (const mockup of mockups) {
@@ -347,7 +351,9 @@
 				title.style.display="none";
 				}
 				searchResult.innerHTML='';
-				sendRequest(curKeyword, page);
+				curData = '';
+				window.scrollTo(0,0);
+				sendRequest(curKeyword);
 				// document.querySelector('#carouselExampleFade').style.opacity="0.9";
 			}else{
 				alert('검색어를 입력해주세요');
@@ -355,60 +361,122 @@
 		});
 
 
-		function sendRequest(curKeyword, page) {
-			if(!isLastPage){
+		function sendRequest(curKeyword) {
 				// ///////////////////////////////////////////////////////
-				fetch(`${root}/map?action=searchByTitle&title=\${curKeyword}&page=\${page}`)
-				.then((response) => response.json())
-				// .then((response) => console.log(response.json()));
-				// .then(data => console.log(data));
-				.then((data) => makeCard(data));
-			}
+			fetch(`/content/searchPlace/\${curKeyword}`)
+			.then((response) => response.json())
+			.then((data) => makeCard(data));
 		}
 
 		function makeCard(data) {
-			// console.log(data);
-			// const dataArr = data.response.body.items.item;
-			// console.dir(dataArr)
-			if(!data) isLastPage = true;
-			let curData = '';
-			if(data){
-				data.forEach(e => {
-				// <div class="card mb-3" style="max-width: 540px;" data-aos="fade-up">
-				// console.log(`\${e.firstImage}`);
+			data.forEach((e) => {
+				let img = encodeURI(e.placeImg);
+				let tel = e.tel;
+				if(img == "null"){
+					img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
+				}
+				if(tel == null){
+					tel = "등록되지 않았습니다";
+				}
 				curData += `
 				<div class="card mb-3 search-card" style="max-width: 540px;" data-aos="fade-up" data-bs-toggle="modal" data-bs-target="#myModal">
 						<div class="row g-0">
-							<div class="col-md-4">
-							<img src="\${e.firstImage}" class="img-fluid rounded-start" alt="..." id="card-img">
+							<div class="col-md-4 pt-1">
+								<img src="\${img}" class="img-fluid rounded-start" alt="..." id="card-img">
 							</div>
 							<div class="col-md-8">
-							<div class="card-body">
-								<h5 class="card-title">\${e.title}</h5>
-								<p class="card-text">\${e.addr1} \${e.addr2}</p>
-								<p class="card-text">\${e.tel}</p>
-							</div>
+								<div class="card-body">
+									<h5 class="card-title text-truncate">\${e.title}</h5>
+									<p class="card-text">\${e.address}</p>
+									<p class="card-text">\${tel}</p>
+								</div>
 							</div>
 						</div>
-						</div>
+				</div>
 				`
+			});
+			searchResult.innerHTML += curData;
+		}
+
+		const APIKEY = "665e2b9849b2ffe8bf99a13aae61959a";
+		
+		function getLocation() {
+		navigator.geolocation.getCurrentPosition(getCoord, getError, options);
+		}
+	
+		function getCoord(response) {
+		const { coords, timestamp } = response;
+		console.log(coords.latitude);
+		getWeather(coords.latitude, coords.longitude);
+		}
+
+		function getError(error) {
+		console.log(error.code);
+		console.log(error.message);
+		}
+		
+		const options = {
+				enableHighAccuracy: true,
+				maximumAge: 0,
+				timeout: Infinity,
+		};
+
+		const weather_icons = {
+				"Thunderstorm" : "cloud-lightning-fill",
+				"Drizzle" : "cloud-drizzle-fill",
+				"Rain" : "cloud-rain-fill",
+				"Snow" : "cloud-snow-fill",
+				"Mist" : "cloud-haze-fill",
+				"Smoke" : "cloud-haze-fill",
+				"Haze" : "cloud-haze-fill",
+				"Dust" : "cloud-haze-fill",
+				"Fog" : "cloud-fog2-fill",
+				"Sand" : "cloud-haze-fill",
+				"Ash" : "cloud-haze-fill",
+				"Squall" : "cloud-rain-heavy-fill",
+				"Tornado" : "cloud-lightning-rain-fill",
+				"Clear" : "brightness-high-fill",
+				"Clouds" : "clouds-fill"
+		};
+		const weathers = {
+				"Thunderstorm" : "천둥/번개",
+				"Drizzle" : "이슬비",
+				"Rain" : "비",
+				"Snow" : "눈",
+				"Mist" : "안개",
+				"Smoke" : "안개",
+				"Haze" : "안개",
+				"Dust" : "안개",
+				"Fog" : "안개",
+				"Sand" : "모래/먼지",
+				"Ash" : "안개",
+				"Squall" : "강우",
+				"Tornado" : "폭풍",
+				"Clear" : "맑음",
+				"Clouds" : "구름"
+		};
+		
+		function getWeather(lat, lng){
+			const url = `https://api.openweathermap.org/data/2.5/weather?lat=\${lat}&lon=\${lng}&appid=\${APIKEY}&units=metric`;
+			
+			let geocoder = new kakao.maps.services.Geocoder();
+
+			let coord = new kakao.maps.LatLng(lat, lng);
+			let callback = function(result, status) {
+				if (status === kakao.maps.services.Status.OK) {
+					document.querySelector("#main-img-text-content-city").innerText = result[0].address.region_3depth_name;
+				}
+			}
+			geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+			fetch(url)
+				.then((response) => response.json())
+				.then((data) => {
+					let weather = `<i class="bi bi-\${weather_icons[data.weather[0].main]}"></i> \${weathers[data.weather[0].main]} \${parseFloat(data.main.temp).toFixed(1)} °C`;
+					document.querySelector("#main-img-text-content-weather").innerHTML = weather;
 				});
-				searchResult.innerHTML += curData;
-				selectObserveTarget();
-			}
 		}
-
-		const io = new IntersectionObserver(e => {
-			if(e[0].isIntersecting){
-				console.log('observing')
-				sendRequest(curKeyword, ++page)
-			}
-		});
-
-		function selectObserveTarget(){ 
-			const target = document.querySelector('#search-result .card:last-child');
-			io.observe(target);
-		}
+	
+	getLocation();
 	</script>
 </body>
 

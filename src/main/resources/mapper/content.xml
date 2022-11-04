@@ -41,13 +41,18 @@
     <select id="getPlaceInfo" parameterType="map" resultMap="placeInfo">
         select *
         from place_info
-        where
-        <if test="key != null">
-            title like concat('%', #{key}, '%')
-        </if>
-        <if test="areaCode != null and sigunguCode != null">
-            area_code = #{areaCode} and sigungu_code = #{sigunguCode}
-        </if>
+        where area_code = #{areaCode} and sigungu_code = #{sigunguCode}
         and map_x between 124 and 132 and map_y between 33 and 40
+    </select>
+
+    <select id="getRandomPlaceInfo" parameterType="map" resultMap="placeInfo">
+        select *
+        from place_info
+    </select>
+
+    <select id="getSearchPlaceInfo" parameterType="map" resultMap="placeInfo">
+        select *
+        from place_info
+        where title like concat('%', #{key}, '%')
     </select>
 </mapper>

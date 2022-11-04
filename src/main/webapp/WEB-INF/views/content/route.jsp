@@ -42,7 +42,7 @@
           <h2 class="text-center mt-5">내 여행 계회 세우기</h2>
           <p class="text-center mb-5">나만의 여행 계획을 세워보세요!</p>
         </div>
-          <div class="container px-4">
+          <div class="container pe-4">
             <div class="row">
               <div class="col-lg-9">
                 <div id="kakaomap" style="width: 100%; min-height: 700px">
@@ -118,6 +118,7 @@ const placeList = document.getElementById("add-place-list");
 let map = null;
 let markerList = null;
 let infoList = null;
+let planMarker = [];
 
 let locImage = {
   12: "tour",
@@ -129,6 +130,10 @@ let locImage = {
   38: "shop",
   39: "restaurant",
 };
+
+mapContainer.addEventListener("mousedrag", function() {
+  closeInfo();
+})
 
 placeSearchBtn.addEventListener("click", async function() {
     
@@ -149,6 +154,10 @@ placeSearchBtn.addEventListener("click", async function() {
         setBounds(bounds);
     }
 });
+
+// mapContainer.addEventListener("click", () => {
+//   closeInfo();
+// })
 
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(place) {
@@ -205,6 +214,8 @@ function makeClickListener(marker, infoWindow, place) {
       .getElementById("add-place-btn")
       .addEventListener("click", function () {
         // const placeList = document.getElementById("add-place-list");
+        planMarker.push(marker);
+        markerList = markerList.filter((el) => el !== marker);
         let img = encodeURI(place.placeImg);
         if(img == "null"){
           img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
@@ -267,6 +278,7 @@ function makeInfo(contentId, title, img, addr, zipCode, tel) {
 	      <img src=\${img} class="img-thumbnail"/>
 	    </div>
 	    <div class="col-md-7 align-self-center flex-wrap mb-1 ps-1">
+        <div class="h-100">
 	      <div class="fw-bold text-truncate">\${addr}</div>`;
 	
 	if(zipCode != null){
@@ -280,7 +292,9 @@ function makeInfo(contentId, title, img, addr, zipCode, tel) {
 	}else{
 		contents += `<div>(전화번호) 없어요 ㅠㅠ</div>`;
 	}
-    contents += `<div class="row d-flex justify-content-between">
+    contents += `
+        </div>
+        <div class="row d-flex justify-content-between align-items-center">
             <div class="col-auto" id="info-url" style="color:blue"><a href="http://data.visitkorea.or.kr/resource/\${contentId}" target="_blank">상세보기</a></div>
             <button class="col-auto btn btn-sm btn-primary me-3" id="add-place-btn">추가</button>
         </div>`

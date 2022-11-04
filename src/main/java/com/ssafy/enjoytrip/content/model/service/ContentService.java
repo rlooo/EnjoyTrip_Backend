@@ -13,4 +13,8 @@ public interface ContentService {
     List<SigunguDto> getSigunguCode(int areaCode) throws Exception;
 
     List<PlaceDto> getPlaceInfo(Map<String, Object> map) throws Exception;
+
+    List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws Exception;
+
+    List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception;
 }

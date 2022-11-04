@@ -81,7 +81,7 @@ public class ContentController {
     @GetMapping("/searchPlace/{key}")
     public ResponseEntity<?> searchPlace(@PathVariable Map<String, Object> map) {
         try {
-            List<PlaceDto> list = contentService.getPlaceInfo(map);
+            List<PlaceDto> list = contentService.getSearchPlaceInfo(map);
             if (list != null && !list.isEmpty()) {
                 return new ResponseEntity<List<PlaceDto>>(list, HttpStatus.OK);
             } else {

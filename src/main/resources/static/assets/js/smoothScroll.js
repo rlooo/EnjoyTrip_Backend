@@ -15,6 +15,13 @@ function SmoothScroll(target, speed, smooth) {
 
   target.addEventListener("mousewheel", scrolled, { passive: false });
   target.addEventListener("DOMMouseScroll", scrolled, { passive: false });
+  target.addEventListener("mouseup", () => {
+    pos = target.scrollTop;
+    update();
+  });
+  target.addEventListener("mousedown", () => {
+    pos = target.scrollTop;
+  });
 
   function scrolled(e) {
     e.preventDefault(); // disable default scrolling

@@ -18,4 +18,7 @@ public interface ContentMapper {
 
     List<PlaceDto> getPlaceInfo(Map<String, Object> map) throws SQLException;
 
+    List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws SQLException;
+
+    List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws SQLException;
 }

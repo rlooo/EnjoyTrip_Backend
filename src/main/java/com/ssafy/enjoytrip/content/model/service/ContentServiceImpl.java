@@ -35,4 +35,14 @@ public class ContentServiceImpl implements ContentService {
         return contentMapper.getPlaceInfo(map);
     }
 
+    @Override
+    public List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws Exception {
+        return contentMapper.getRandomPlaceInfo(map);
+    }
+
+    @Override
+    public List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception {
+        return contentMapper.getSearchPlaceInfo(map);
+    }
+
 }
