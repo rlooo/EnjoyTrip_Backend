@@ -25,4 +25,6 @@ public interface BoardMapper {
     void deleteImg(int articleNo) throws SQLException;
 
     void deleteBoard(int articleNo) throws SQLException;
+    
+    int getTotalArticleCount(Map<String, Object> map) throws SQLException;
 }

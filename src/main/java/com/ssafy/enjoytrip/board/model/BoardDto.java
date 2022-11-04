@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.board.model;
 
+import java.util.List;
+
 public class BoardDto {
     private int articleNo;
     private String userId;
@@ -8,6 +10,7 @@ public class BoardDto {
     private int hit;
     private String registDate;
     private int isNotice;
+    private List<FileInfoDto> fileInfos;
 
     public int getArticleNo() {
         return articleNo;
@@ -64,4 +67,21 @@ public class BoardDto {
     public void setIsNotice(int isNotice) {
         this.isNotice = isNotice;
     }
+    
+	public List<FileInfoDto> getFileInfos() {
+		return fileInfos;
+	}
+
+	public void setFileInfos(List<FileInfoDto> fileInfos) {
+		this.fileInfos = fileInfos;
+	}
+
+	@Override
+	public String toString() {
+		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", title=" + title + ", content=" + content
+				+ ", hit=" + hit + ", registDate=" + registDate + ", isNotice=" + isNotice + ", fileInfos=" + fileInfos
+				+ "]";
+	}
+	
+	
 }

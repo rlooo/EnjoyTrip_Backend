@@ -55,14 +55,16 @@
 		</where>
 	</select>
 
-	<select id="getBoard" parameterType="int"
-		resultMap="board">
-		select b.article_no, b.user_id, b.title, b.content, b.hit,
-		b.regist_date, b.is_notice,
+	<select id="getBoard" parameterType="int" resultMap="board">
+		select
+		b.article_no, b.user_id, b.title, b.content, b.hit,
+		b.regist_date,
+		b.is_notice,
 		m.user_name
 		from board b, members m
 		where
-		b.user_id = m.user_id
+		b.user_id =
+		m.user_id
 		and b.article_no =
 		#{articleNo}
 	</select>
@@ -81,9 +83,16 @@
 		where article_no = #{articleNo}
 	</update>
 
-	<delete id="deleteArticle" parameterType="int">
+	<delete id="deleteBoard" parameterType="int">
 		delete from board
-		where article_no = #{articleNo}
+		where
+		article_no = #{articleNo}
+	</delete>
+
+	<delete id="deleteImg" parameterType="int">
+		delete from board_img
+		where
+		article_no = #{articleNo}
 	</delete>
 
 
