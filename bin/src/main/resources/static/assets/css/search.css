@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #313030;
+}
+
+.table-hover:hover {
+  cursor: pointer;
+}
+
+#result-area {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#result-area > .col-md-5 > .container {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+#result-area > .col-md-5 > button {
+  float: right;
+  margin: 0 5px;
+  /* width: 20px; */
+  /* font-size: 20px; */
+  /* border-radius: 5px; */
+}
+.title {
+  margin-bottom: 20px;
+}
+
+.title h2 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.title p {
+  margin-top: 5px;
+  font-size: 18px;
+  float: center;
+  color: grey;
+}

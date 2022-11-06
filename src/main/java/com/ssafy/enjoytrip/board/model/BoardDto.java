@@ -19,12 +19,16 @@ public class BoardDto {
     public void setArticleNo(int articleNo) {
         this.articleNo = articleNo;
     }
+    
+    public String getUserId() {
+		return userId;
+	}
 
-    public String getWriter() {
-        return userId;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public void setTitle(String title) {
+	public void setTitle(String title) {
         this.title = title;
     }
 
@@ -79,7 +83,7 @@ public class BoardDto {
 	@Override
 	public String toString() {
 		return "BoardDto [articleNo=" + articleNo + ", userId=" + userId + ", title=" + title + ", content=" + content
-				+ ", hit=" + hit + ", registDate=" + registDate + ", isNotice=" + isNotice + ", fileInfos=" + fileInfos
+				+ ", hit=" + hit + ", registDate=" + registDate + ", isNotice=" + isNotice
 				+ "]";
 	}
 	

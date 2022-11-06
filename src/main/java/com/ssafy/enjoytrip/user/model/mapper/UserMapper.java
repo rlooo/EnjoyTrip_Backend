@@ -17,8 +17,6 @@ public interface UserMapper {
     void registUser(UserDto userDto) throws SQLException;
 
     UserDto getUser(String userId) throws SQLException;
-    
-    UserDto getUserByEmail(String emailId) throws SQLException;
 
     void updateUser(UserDto userDto) throws SQLException;
 

@@ -7,11 +7,14 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
+import com.ssafy.enjoytrip.board.model.FileInfoDto;
 
 @Mapper
 public interface BoardMapper {
     void writeBoard(BoardDto boardDto) throws SQLException;
-
+    
+    void registerFile(BoardDto boardDto) throws Exception;
+    
     List<BoardDto> getBoardList(Map<String, Object> map) throws SQLException;
 
     int getTotalBoardCount(Map<String, Object> map) throws SQLException;
@@ -27,4 +30,6 @@ public interface BoardMapper {
     void deleteBoard(int articleNo) throws SQLException;
     
     int getTotalArticleCount(Map<String, Object> map) throws SQLException;
+    
+    List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
 }
