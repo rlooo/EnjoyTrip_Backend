@@ -30,7 +30,7 @@ import com.ssafy.enjoytrip.user.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @RequestMapping("/user")
 public class SocialController {
 	private final Logger logger = LoggerFactory.getLogger(SocialController.class);

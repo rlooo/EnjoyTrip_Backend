@@ -190,7 +190,7 @@ h6 {
 # Header
 --------------------------------------------------------------*/
 #header {
-  height: 70px;
+  height: 100px;
   /* transition: all 0.5s; */
   z-index: 997;
   background: #fff;
@@ -238,6 +238,7 @@ h6 {
 */
 .navbar {
   padding: 0;
+  height: 1000px;
 }
 
 .navbar ul {

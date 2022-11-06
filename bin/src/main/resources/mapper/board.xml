@@ -12,15 +12,33 @@
 		<result column="regist_date" property="registDate" />
 		<result column="is_notice" property="isNotice" />
 	</resultMap>
+	
+	<resultMap type="boardDto" id="viewArticle" extends="board">
+		<collection property="fileInfos" column="article_no" javaType="list" ofType="fileInfoDto" select="fileInfoList"/>
+	</resultMap>
+	
+	<resultMap type="fileInfoDto" id="file">
+		<result column="save_folder" property="saveFolder"/>
+		<result column="original_file" property="originalFile"/>
+		<result column="save_file" property="saveFile"/>
+	</resultMap>
 
 	<insert id="writeBoard" parameterType="boardDto">
 		insert into board (user_id, title, content, hit, regist_date,
 		is_notice)
-		values (#{userId}, #{title}, #{content}, 0, now())
+		values (#{userId}, #{title}, #{content}, 0, now(),#{isNotice})
 		<selectKey resultType="int" keyProperty="articleNo"
 			order="AFTER">
 			select last_insert_id()
 		</selectKey>
+	</insert>
+	
+	<insert id="registerFile" parameterType="boardDto">
+		insert into img_file_info (article_no, save_folder, original_file, save_file)
+		values
+		<foreach collection="fileInfos" item="fileinfo" separator=" , ">
+			(#{articleNo}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
+		</foreach>
 	</insert>
 
 	<sql id="search">
@@ -37,13 +55,12 @@
 	<select id="getBoardList" parameterType="map" resultMap="board">
 		select b.article_no, b.user_id, b.title, b.content, b.hit,
 		b.regist_date, b.is_notice,
-		m.user_name
-		from board b, members m
+		u.user_name
+		from board b, user u
 		where
-		b.user_id = m.user_id
+		b.user_id = u.user_id
 		<include refid="search"></include>
 		order by b.article_no desc
-		limit #{start}, #{listsize}
 	</select>
 
 	<select id="getTotalArticleCount" parameterType="map"
@@ -60,11 +77,11 @@
 		b.article_no, b.user_id, b.title, b.content, b.hit,
 		b.regist_date,
 		b.is_notice,
-		m.user_name
-		from board b, members m
+		u.user_name
+		from board b, user u
 		where
 		b.user_id =
-		m.user_id
+		u.user_id
 		and b.article_no =
 		#{articleNo}
 	</select>
@@ -79,7 +96,7 @@
 	<update id="modifyBoard" parameterType="boardDto">
 		update board
 		set title =
-		#{title}, content = #{content}
+		#{title}, content = #{content}, is_notice=#{isNotice}
 		where article_no = #{articleNo}
 	</update>
 
@@ -90,10 +107,16 @@
 	</delete>
 
 	<delete id="deleteImg" parameterType="int">
-		delete from board_img
+		delete from img_file_info
 		where
 		article_no = #{articleNo}
 	</delete>
+	
+	<select id="fileInfoList" resultMap="file">
+		select save_folder, original_file, save_file
+		from img_file_info
+		where article_no = #{articleNo}
+	</select>
 
 
 </mapper>

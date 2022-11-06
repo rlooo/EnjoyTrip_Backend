@@ -35,12 +35,12 @@ function connectKakaoMap(lat, lon) {
   const currentMarker = new kakao.maps.LatLng(lat, lon);
 
   // 마커를 생성합니다
-  const marker = new kakao.maps.Marker({
-    position: currentMarker,
-  });
+  // const marker = new kakao.maps.Marker({
+  //   position: currentMarker,
+  // });
 
-  // 마커가 지도 위에 표시되도록 설정합니다
-  marker.setMap(map);
+  // // 마커가 지도 위에 표시되도록 설정합니다
+  // marker.setMap(map);
 }
 
 function closeInfo() {

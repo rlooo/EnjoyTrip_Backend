@@ -70,6 +70,7 @@
       ></a>
 </section>
 
+<script src="${root}/assets/js/smoothScroll.js"></script>
 <script type="text/javascript" src="${root}/assets/js/kakaoMap.js"></script>
 <script>
 const selectState = document.querySelector("#select-state");
