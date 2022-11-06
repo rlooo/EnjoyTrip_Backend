@@ -39,7 +39,7 @@
     <div class="container">
       <section id="blog" class="blog" style="padding-top: 0">
         <div class="title">
-          <h2 class="text-center mt-5">내 여행 계회 세우기</h2>
+          <h2 class="text-center mt-5">내 여행 계획 세우기</h2>
           <p class="text-center mb-5">나만의 여행 계획을 세워보세요!</p>
         </div>
           <div class="container pe-4">
@@ -69,7 +69,7 @@
                 </div>
               </div>
               <div class="col-lg-3">
-                <div class="sidebar row h-100 d-flex text-center justify-content-center">
+                <div class="sidebar row h-100 d-flex text-center justify-content-center py-1">
                   <div class="sidebar-title">여행 계획</div>
                   <div class="row">
                     <div
@@ -84,13 +84,6 @@
                   >
                   </div>
                   <div class="row ms-1 pe-4">
-                    <button
-                      type="button"
-                      class="btn btn-primary my-1"
-                      id="search-path-btn"
-                    >
-                      경로탐색
-                    </button>
                     <button
                       type="button"
                       class="btn btn-primary my-1"
@@ -115,10 +108,22 @@ const mapContainer = document.getElementById("kakaomap");
 const inputPlace = document.getElementById("place-input");
 const placeSearchBtn = document.getElementById("place-search-btn");
 const placeList = document.getElementById("add-place-list");
+const polyline = new kakao.maps.Polyline({
+  strokeWeight: 5, // 선의 두께 입니다
+  strokeColor: '#FFAE00', // 선의 색깔입니다
+  strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+  strokeStyle: 'solid', // 선의 스타일입니다
+  endArrow: true,
+});
 let map = null;
-let markerList = null;
-let infoList = null;
+let clusterer = null;
+let markerList = [];
+let infoList = [];
+let planPlace = [];
 let planMarker = [];
+let planInfoWindow = [];
+let linePath = [];
+let planListUUID = [];
 
 let locImage = {
   12: "tour",
@@ -131,55 +136,60 @@ let locImage = {
   39: "restaurant",
 };
 
-mapContainer.addEventListener("mousedrag", function() {
-  closeInfo();
-})
+function allInfoClose(){
+  closeInfo(infoList);
+  closeInfo(planInfoWindow);
+}
 
 placeSearchBtn.addEventListener("click", async function() {
-    
-    delMarker();
-    if (inputPlace.value) {
-        const places = await fetch("/content/searchPlace/"+inputPlace.value)
-            .then((response) => response.json());
-        closeInfo();
-        infoList = [];
-        markerList = [];
-        var bounds = new kakao.maps.LatLngBounds();
+  
+  kakao.maps.event.addListener(map, "drag", allInfoClose);
+  
+  delMarker();
+  if (inputPlace.value) {
+      let places = await fetch("/content/searchPlace/"+inputPlace.value)
+          .then((response) => response.json());
+      allInfoClose();
+      infoList = [];
+      markerList = [];
+      if(planMarker.length > 0){
+        for(let i = 0; i < planMarker.length; i++){
+          markerList.push(Object.assign(new kakao.maps.Marker(), planMarker[i]));
+          infoList.push(Object.assign(new kakao.maps.InfoWindow(), planInfoWindow[i]));
+        }
+      }
+      places = places.filter((item) => !planPlace.some((c) => c.contentId == item.contentId));
+      var bounds = new kakao.maps.LatLngBounds();
 
-        for (var i = 0; i < places.length; i++) {
+      for (let i = 0; i < places.length; i++) {
         displayMarker(places[i]);
         bounds.extend(new kakao.maps.LatLng(Number(places[i].mapY), Number(places[i].mapX)));
-        }
+      }
+      clusterer = new kakao.maps.MarkerClusterer({
+          map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+          averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+          minLevel: 7 // 클러스터 할 최소 지도 레벨 
+      });
 
-        setBounds(bounds);
-    }
+      clusterer.addMarkers(markerList);
+
+      setBounds(bounds);
+  }
 });
-
-// mapContainer.addEventListener("click", () => {
-//   closeInfo();
-// })
 
 // 지도에 마커를 표시하는 함수입니다
 function displayMarker(place) {
   // 마커를 생성하고 지도에 표시합니다
   const pos = new kakao.maps.LatLng(Number(place.mapY), Number(place.mapX));
-    const marker = new kakao.maps.Marker({
-        map : map,
-      position: pos,
-      title: place.title,
-      image: new kakao.maps.MarkerImage("${root}/assets/img/marker/"+locImage[place.contentType]+".png",
-        new kakao.maps.Size(37, 37)
-      ),
-    });
+  const marker = new kakao.maps.Marker({
+    position: pos,
+    title: place.title,
+    image: new kakao.maps.MarkerImage("${root}/assets/img/marker/"+locImage[place.contentType]+".png",
+      new kakao.maps.Size(37, 37)
+    ),
+  });
 
-  const infoContent = makeInfo(
-      place.contentId,
-      place.title,
-      encodeURI(place.placeImg),
-      place.address,
-      place.zipCode,
-      place.tel
-      );
+  const infoContent = makeInfo(marker, place);
 
   const infoWindow = new kakao.maps.InfoWindow({
     content: infoContent,
@@ -197,10 +207,8 @@ function setCenter(pos) {
 }
 
 function delMarker() {
-  if (markerList) {
-    markerList.forEach((marker) => {
-      marker.setMap(null);
-    });
+  if(clusterer){
+    clusterer.removeMarkers(markerList);
   }
 }
 
@@ -208,101 +216,205 @@ function delMarker() {
 function makeClickListener(marker, infoWindow, place) {
   return function () {
     // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-    closeInfo();
+    allInfoClose();
     infoWindow.open(map, marker);
-    document
-      .getElementById("add-place-btn")
-      .addEventListener("click", function () {
-        // const placeList = document.getElementById("add-place-list");
-        planMarker.push(marker);
-        markerList = markerList.filter((el) => el !== marker);
-        let img = encodeURI(place.placeImg);
-        if(img == "null"){
-          img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
-        }
-        let tel = place.tel;
-        if(tel == null){
-          tel = "없어요ㅠㅠ";
-        }
-        let planInfoPlace = `
-          <div class="text-start border py-1 rounded-2 my-1 placeList-item draggable"
-                draggable="true"
-                ondragstart="handlerDragStart(this)"
-                ondragend="handlerDragEnd(this)">
-            <div class="row">
-              <div class="col-md-5 pe-1">
-                <img src=\${img} class="img-fluid"/>
-              </div>
-              <div class="col-md-7 ps-0">
-                <div class="fw-bold text-truncate" id="place-title" style="background:#eee; margin-top:-0.21rem; border-radius:0 0.2rem 0 0; font-size:0.8rem">
-                  \${place.title}
-                </div>
-                <div class="mt-1">
-                  <div style="font-size:0.3em">-\${place.address}</div>
-                  <div style="font-size:0.2em">-\${tel}</div>
-                </div>
-              </div>
-              </div class="mx-5">
-                <textarea class="form-control my-1" placeholder="간단 메모" style="font-size: 0.3em"></textarea>
-                <div class="row d-flex justify-content-between align-items-center px-1" style="font-size:0.7em">
-                  <div class="col-auto" id="info-url" style="color:blue">
-                    <a href="http://data.visitkorea.or.kr/resource/\${place.contentId}" target="_blank">상세보기</a>
-                  </div>
-                  <button class="col-auto btn btn-sm btn-danger me-2" onclick=delPlaceInfo(this) style="font-size:0.7rem">삭제</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        placeList.innerHTML += planInfoPlace;
-      });
     setCenter(new kakao.maps.LatLng(Number(place.mapY), Number(place.mapX)));
   };
 }
 
-function delPlaceInfo(e){
-  const placeList = document.getElementById("add-place-list");
-  const parentEl = e.closest("#add-place-list > div");
-  placeList.removeChild(parentEl);
+function addPlanPlace(marker, place, uuid){
+  planPlace.push(Object.assign({},place));
+  planMarker.push(Object.assign(new kakao.maps.Marker(),marker));
+  planListUUID.push(uuid);
+  addMarkerLinePath(marker);
+  for(let i = 0; i < markerList.length; i++){
+    if((markerList[i].getPosition().getLat()).toPrecision(14) == place.mapY 
+        && (markerList[i].getPosition().getLng()).toPrecision(14) == place.mapX){
+        // markerList.splice(i, 1);
+        planInfoWindow.push(Object.assign(new kakao.maps.InfoWindow(), infoList[i]));
+        // infoList.splice(i, 1);
+    }
+  }
+}
+
+function removePlanPlace(uuid){
+  for(let i = 0; i < planListUUID.length; i++){
+    if(planListUUID[i] == uuid){
+      removeMarkerLinePath(i);
+      planMarker[i].setMap(null);
+      planListUUID.splice(i, 1);
+      planPlace.splice(i, 1);
+      planMarker.splice(i, 1);
+      planInfoWindow.splice(i, 1);
+    }
+  }
+}
+
+function addMarkerLinePath(marker){
+  linePath.push(Object.assign(new kakao.maps.LatLng(), marker.getPosition()));
+  if(linePath.length > 1){
+    polyline.setMap(null);
+    polyline.setPath(linePath);
+    polyline.setMap(map);
+  }
+}
+
+function removeMarkerLinePath(idx){
+  linePath.splice(idx, 1);
+  polyline.setMap(null);
+  polyline.setPath(linePath);
+  polyline.setMap(map);
+}
+
+function addPlanBtn(marker, place){
+  console.log("add check");
+  let uuid = self.crypto.randomUUID();
+  addPlanPlace(marker, place, uuid);
+  let img = encodeURI(place.placeImg);
+  if(img == "null"){
+    img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
+  }
+  let tel = place.tel;
+  if(tel == null){
+    tel = "없어요ㅠㅠ";
+  }
+  const planInfoDiv = document.createElement("div");
+  planInfoDiv.setAttribute("class", "text-start border py-1 rounded-2 my-1 placeList-item draggable");
+  planInfoDiv.draggable = true;
+  planInfoDiv.addEventListener("dragstart", () => handlerDragStart(planInfoDiv));
+  planInfoDiv.addEventListener("dragend", () => handlerDragEnd(planInfoDiv));
+
+
+  let planInfoPlace = `
+    <div class="text-start border py-1 rounded-2 my-1 placeList-item draggable"
+          draggable="true"
+          ondragstart="handlerDragStart(this)"
+          ondragend="handlerDragEnd(this)">
+      <div class="row">
+        <div class="col-md-5 pe-1">
+          <img src=\${img} class="img-fluid"/>
+        </div>
+        <div class="col-md-7 ps-0">
+          <div class="fw-bold text-truncate" id="place-title" style="background:#eee; margin-top:-0.21rem; border-radius:0 0.2rem 0 0; font-size:0.8rem">
+            \${place.title}
+          </div>
+          <div class="mt-1">
+            <div style="font-size:0.3em">-\${place.address}</div>
+            <div style="font-size:0.2em">-\${tel}</div>
+          </div>
+        </div>
+        </div class="mx-5">
+          <textarea class="form-control my-1" placeholder="간단 메모" style="font-size: 0.3em"></textarea>
+          <div class="row d-flex justify-content-between align-items-center px-1" style="font-size:0.7em">
+            <div class="col-auto" id="info-url" style="color:blue">
+              <a href="http://data.visitkorea.or.kr/resource/\${place.contentId}" target="_blank">상세보기</a>
+            </div>
+            <button class="col-auto btn btn-sm btn-danger me-2" id="\${uuid}" style="font-size:0.7rem">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  placeList.innerHTML += planInfoPlace;
+  // document.getElementById(uuid).addEventListener("click", function(){
+  //   removePlanPlace(uuid);
+  //   const parentEl = this.closest("#add-place-list > div");
+  //   placeList.removeChild(parentEl);
+  // });
+  planListUUID.forEach((item) => {
+    document.getElementById(item).addEventListener("click", function(){
+      removePlanPlace(item);
+      console.log(linePath, planMarker);
+      const parentEl = this.closest("#add-place-list > div");
+      placeList.removeChild(parentEl);
+    });
+  });
 }
 
 // 콘텐츠 정보 표시 tag 설정
-function makeInfo(contentId, title, img, addr, zipCode, tel) {
+function makeInfo(marker, place) {
+  let contentId = place.contentId;
+  let title = place.title;
+  let img = encodeURI(place.placeImg)
+  let addr = place.address;
+  let zipCode = place.zipCode;
+  let tel = place.tel;
 	if(img == "null"){
 		img = "<c:out value='${root}/assets/img/no_img.jpg'/>";
 	}
-	var contents = `<div style="max-width:400px">
-	    <div class="px-2 py-1 fw-bold fs-5" style="background:#eee">\${title}</div>
-	    <div class="row">
-	    <div class="col-md-5 pe-0">
-	      <img src=\${img} class="img-thumbnail"/>
-	    </div>
-	    <div class="col-md-7 align-self-center flex-wrap mb-1 ps-1">
-        <div class="h-100">
-	      <div class="fw-bold text-truncate">\${addr}</div>`;
-	
-	if(zipCode != null){
-		contents += `<div>(우) \${zipCode}</div>`;
-	}else{
-		contents += `<div>(우) 없어요 ㅠㅠ</div>`;
-	}
-	      
-	if(tel != null){
-		contents += `<div>(전화번호) \${tel}</div>`;
-	}else{
-		contents += `<div>(전화번호) 없어요 ㅠㅠ</div>`;
-	}
-    contents += `
-        </div>
-        <div class="row d-flex justify-content-between align-items-center">
-            <div class="col-auto" id="info-url" style="color:blue"><a href="http://data.visitkorea.or.kr/resource/\${contentId}" target="_blank">상세보기</a></div>
-            <button class="col-auto btn btn-sm btn-primary me-3" id="add-place-btn">추가</button>
-        </div>`
-  return contents +
-    `
-    </div>
-    </div>
-  </div>`;
+  if(zipCode == null){
+    zipCode = "등록된 우편번호가 없습니다";
+  }
+  if(tel == null){
+    tel = "등록된  전화번호가 없습니다";
+  }
+  const infoDiv = document.createElement("div");
+  infoDiv.style = "max-width:400px";
+
+  const infoTitleDiv = document.createElement("div");
+  infoTitleDiv.setAttribute("class", "px-2 py-1 fw-bold fs-5");
+  infoTitleDiv.style = "background:#eee";
+  infoTitleDiv.innerText = title;
+  infoDiv.appendChild(infoTitleDiv);
+
+  const infoContentDiv = document.createElement("div");
+  infoContentDiv.setAttribute("class", "row");
+
+  const infoContentImgDiv = document.createElement("div");
+  infoContentImgDiv.setAttribute("class", "col-md-5 pe-0");
+
+  const infoContentImg = document.createElement("img");
+  infoContentImg.setAttribute("src", img);
+  infoContentImg.setAttribute("class", "img-thumbnail");
+  infoContentImgDiv.appendChild(infoContentImg);
+  infoContentDiv.appendChild(infoContentImgDiv);
+
+  const infoContentRightDiv = document.createElement("div");
+  infoContentRightDiv.setAttribute("class", "col-md-7 align-self-center flex-wrap mb-1 ps-1");
+
+  const infoContentRightInfoDiv = document.createElement("div");
+  infoContentRightInfoDiv.setAttribute("class", "h-100");
+
+  const infoContentRightAddr = document.createElement("div");
+  infoContentRightAddr.setAttribute("class", "fw-bold text-truncate");
+  infoContentRightAddr.innerText = addr;
+  infoContentRightInfoDiv.appendChild(infoContentRightAddr);
+
+  const infoContentRightZip = document.createElement("div");
+  infoContentRightZip.innerText = zipCode;
+  infoContentRightInfoDiv.appendChild(infoContentRightZip);
+
+  const infoContentRightTel = document.createElement("div");
+  infoContentRightTel.innerText = tel;
+  infoContentRightInfoDiv.appendChild(infoContentRightTel);
+  infoContentRightDiv.append(infoContentRightInfoDiv);
+
+  const infoContentRightBtnDiv = document.createElement("div");
+  infoContentRightBtnDiv.setAttribute("class", "row d-flex justify-content-between align-items-center");
+
+  const infoContentRightLinkDiv = document.createElement("div");
+  infoContentRightLinkDiv.setAttribute("class", "col-auto");
+  infoContentRightLinkDiv.setAttribute("id", "info-url");
+  infoContentRightLinkDiv.style = "color:blue";
+
+  const infoContentRightLinkA = document.createElement("a");
+  infoContentRightLinkA.setAttribute("href", "http://data.visitkorea.or.kr/resource/"+contentId);
+  infoContentRightLinkA.target = "_blank";
+  infoContentRightLinkA.innerText = "상세보기";
+  infoContentRightLinkDiv.appendChild(infoContentRightLinkA);
+  infoContentRightBtnDiv.appendChild(infoContentRightLinkDiv);
+
+  const infoContentRightBtn = document.createElement("button");
+  infoContentRightBtn.setAttribute("class", "col-auto btn btn-sm btn-primary me-3");
+  infoContentRightBtn.innerText = "추가";
+  infoContentRightBtn.addEventListener("click", () => addPlanBtn(marker, place));
+  infoContentRightBtnDiv.appendChild(infoContentRightBtn);
+  infoContentRightDiv.appendChild(infoContentRightBtnDiv);
+
+  infoContentDiv.appendChild(infoContentRightDiv);
+  infoDiv.appendChild(infoContentDiv);
+
+	return infoDiv;
 }
 
 // Place List Item Event
