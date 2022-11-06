@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.enjoytrip.board.model.mapper.BoardMapper">
+	<resultMap type="boardDto" id="board">
+		<result column="article_no" property="articleNo" />
+		<result column="user_id" property="userId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="hit" property="hit" />
+		<result column="regist_date" property="registDate" />
+		<result column="is_notice" property="isNotice" />
+	</resultMap>
+
+	<insert id="writeBoard" parameterType="boardDto">
+		insert into board (user_id, title, content, hit, regist_date,
+		is_notice)
+		values (#{userId}, #{title}, #{content}, 0, now())
+		<selectKey resultType="int" keyProperty="articleNo"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<sql id="search">
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and ${key} = #{word}
+			</if>
+		</if>
+	</sql>
+
+	<select id="getBoardList" parameterType="map" resultMap="board">
+		select b.article_no, b.user_id, b.title, b.content, b.hit,
+		b.regist_date, b.is_notice,
+		m.user_name
+		from board b, members m
+		where
+		b.user_id = m.user_id
+		<include refid="search"></include>
+		order by b.article_no desc
+		limit #{start}, #{listsize}
+	</select>
+
+	<select id="getTotalArticleCount" parameterType="map"
+		resultType="int">
+		select count(article_no)
+		from board
+		<where>
+			<include refid="search"></include>
+		</where>
+	</select>
+
+	<select id="getBoard" parameterType="int" resultMap="board">
+		select
+		b.article_no, b.user_id, b.title, b.content, b.hit,
+		b.regist_date,
+		b.is_notice,
+		m.user_name
+		from board b, members m
+		where
+		b.user_id =
+		m.user_id
+		and b.article_no =
+		#{articleNo}
+	</select>
+
+	<update id="updateHit" parameterType="int">
+		update board
+		set hit = hit +
+		1
+		where article_no = #{articleNo}
+	</update>
+
+	<update id="modifyBoard" parameterType="boardDto">
+		update board
+		set title =
+		#{title}, content = #{content}
+		where article_no = #{articleNo}
+	</update>
+
+	<delete id="deleteBoard" parameterType="int">
+		delete from board
+		where
+		article_no = #{articleNo}
+	</delete>
+
+	<delete id="deleteImg" parameterType="int">
+		delete from board_img
+		where
+		article_no = #{articleNo}
+	</delete>
+
+
+</mapper>

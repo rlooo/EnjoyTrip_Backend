@@ -20,37 +20,37 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int idCheck(String userId) throws Exception {
-        return 0;
+        return userMapper.idCheck(userId);
     }
 
     @Override
     public UserDto loginUser(Map<String, Object> map) throws Exception {
-        return null;
+        return userMapper.loginUser(map);
     }
 
     @Override
     public void registUser(UserDto userDto) throws Exception {
-
+    	userMapper.registUser(userDto);
     }
 
     @Override
     public UserDto getUser(String userId) throws Exception {
-        return null;
+        return userMapper.getUser(userId);
     }
 
     @Override
     public void updateUser(UserDto userDto) throws Exception {
-
+    	userMapper.updateUser(userDto);
     }
 
     @Override
     public void deleteUser(String userId) throws Exception {
-
+    	userMapper.deleteUser(userId);
     }
 
     @Override
     public List<UserDto> getUserList(Map<String, Object> map) throws Exception {
-        return null;
+        return userMapper.getUserList(map);
     }
 
 }

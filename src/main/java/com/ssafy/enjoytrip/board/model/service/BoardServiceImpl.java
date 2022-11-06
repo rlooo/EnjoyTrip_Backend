@@ -12,51 +12,51 @@ import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 @Service
 public class BoardServiceImpl implements BoardService {
 
-    private BoardMapper boardMapper;
+	private BoardMapper boardMapper;
 
-    @Autowired
-    public BoardServiceImpl(BoardMapper boardMapper) {
-        this.boardMapper = boardMapper;
-    }
+	@Autowired
+	public BoardServiceImpl(BoardMapper boardMapper) {
+		this.boardMapper = boardMapper;
+	}
 
-    @Override
-    public void writeBoard(BoardDto boardDto) throws Exception {
+	@Override
+	public void writeBoard(BoardDto boardDto) throws Exception {
+		System.out.println("글입력 전 dto : " + boardDto);
+		boardMapper.writeBoard(boardDto);
+		System.out.println("글입력 후 dto : " + boardDto);
 
-    }
+	}
 
-    @Override
-    public List<BoardDto> getBoardList(Map<String, Object> map) throws Exception {
-        return null;
-    }
+	@Override
+	public List<BoardDto> getBoardList(Map<String, Object> map) throws Exception {
+		return boardMapper.getBoardList(map);
+	}
 
-    @Override
-    public int getTotalBoardCount(Map<String, Object> map) throws Exception {
-        return 0;
-    }
+	@Override
+	public BoardDto getBoard(int articleNo) throws Exception {
+		return boardMapper.getBoard(articleNo);
 
-    @Override
-    public BoardDto getBoard(int articleNo) throws Exception {
-        return null;
-    }
+	}
 
-    @Override
-    public void updateView(int articleNo) throws Exception {
+	@Override
+	public void modifyBoard(BoardDto boardDto) throws Exception {
+		boardMapper.modifyBoard(boardDto);
+	}
 
-    }
+	@Override
+	public void deleteImg(int articleNo) throws Exception {
+		boardMapper.deleteImg(articleNo);
+	}
 
-    @Override
-    public void modifyBoard(BoardDto boardDto) throws Exception {
+	@Override
+	public void deleteBoard(int articleNo) throws Exception {
+		boardMapper.deleteBoard(articleNo);
+	}
 
-    }
 
-    @Override
-    public void deleteImg(int articleNo) throws Exception {
-
-    }
-
-    @Override
-    public void deleteBoard(int articleNo) throws Exception {
-
-    }
+	@Override
+	public void updateHit(int articleNo) throws Exception {
+		boardMapper.updateHit(articleNo);
+	}
 
 }
