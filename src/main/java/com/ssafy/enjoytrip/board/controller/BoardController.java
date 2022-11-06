@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -78,7 +79,7 @@ public class BoardController {
 		}
 
 	}
-
+	@Transactional
 	@PostMapping(value = "/write")
 	public ResponseEntity<?> write(@Value("${file.path.upload-files}") String filePath, @RequestBody BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("boardRegister boardDto : {}", boardDto);
@@ -122,6 +123,7 @@ public class BoardController {
 		}
 	}
 
+	@Transactional
 	@GetMapping(value = "/view/{articleno}")
 	public ResponseEntity<?> view(@PathVariable("articleno") int articleNo) throws Exception {
 		logger.debug("boardView articleNo : {}", articleNo);
@@ -138,6 +140,7 @@ public class BoardController {
 		}
 	}
 
+	@Transactional
 	@PutMapping(value = "/modify")
 	public ResponseEntity<?> modify(@RequestBody BoardDto boardDto) {
 		logger.debug("boardModify boardDto : {}", boardDto);
@@ -151,6 +154,7 @@ public class BoardController {
 
 	}
 
+	@Transactional
 	@DeleteMapping(value = "/delete/{articleno}")
 	public ResponseEntity<?> boardDelete(@PathVariable("articleno") int articleNo) {
 		logger.debug("boardDelete articleNo : {}", articleNo);
