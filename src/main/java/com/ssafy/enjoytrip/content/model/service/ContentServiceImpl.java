@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.content.model.AreaDto;
 import com.ssafy.enjoytrip.content.model.PlaceDto;
+import com.ssafy.enjoytrip.content.model.PlanDto;
 import com.ssafy.enjoytrip.content.model.SigunguDto;
 import com.ssafy.enjoytrip.content.model.mapper.ContentMapper;
 
@@ -43,6 +44,12 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception {
         return contentMapper.getSearchPlaceInfo(map);
+    }
+
+    @Override
+    public void writePlan(PlanDto planDto) throws Exception {
+        contentMapper.writePlan(planDto);
+        contentMapper.writePlanPlace(planDto);
     }
 
 }

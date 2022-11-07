@@ -95,10 +95,11 @@ public class ContentController {
         }
     }
 
-    @PostMapping("/write")
+    @PostMapping("/plan/write")
     public ResponseEntity<?> writePlan(@RequestBody PlanDto planDto) {
         try {
-            System.out.println(planDto.getContentList().toString());
+            planDto.setUserId("ssafy1");
+            contentService.writePlan(planDto);
             return new ResponseEntity<Void>(HttpStatus.OK);
         } catch (Exception e) {
             return exceptionHandling(e);

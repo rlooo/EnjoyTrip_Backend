@@ -456,9 +456,34 @@ function makeInfo(marker, place) {
 
 document.querySelector("#save-plan-btn").addEventListener("click", () => {
   let title = document.querySelector("#plan-title").value;
-  let contentList = planPlace.map((place) => place.contentId);
-  let memoList = Array.from(document.querySelectorAll(".plan-place-memo")).map((el) => el.value);
-  console.log(memoList);
+  let contents = planPlace.map((place) => place.contentId);
+  if(title == ""){
+    alert("제목을 입력해주세요");
+  }
+  if(contents.length == 0){
+    console.log("check");
+    alert("여행 지역을 1개 이상 선택해주세요");
+  }else{
+    let memoList = Array.from(document.querySelectorAll(".plan-place-memo")).map((el) => el.value);
+    let contentList = [];
+    for(let i = 0; i < contents.length; i++){
+      contentList.push({
+        contentId : contents[i],
+        memo : memoList[i],
+      })
+    }
+    console.log(contentList);
+    let writePlan = {
+      title : title,
+      contentList: contentList,
+    };
+    let config = {
+      method : "POST",
+      headers : {"Content-Type":"application/json"},
+      body : JSON.stringify(writePlan),
+    };
+    fetch(`/content/plan/write`, config).then((response) => console.log(response));
+  }
 });
 
 // Place List Item Event
