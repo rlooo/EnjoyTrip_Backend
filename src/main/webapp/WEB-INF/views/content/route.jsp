@@ -39,8 +39,8 @@
     <div class="container">
       <section id="blog" class="blog" style="padding-top: 0">
         <div class="title">
-          <h2 class="text-center mt-5">내 여행 계획 세우기</h2>
-          <p class="text-center mb-5">나만의 여행 계획을 세워보세요!</p>
+          <h2 class="text-center mt-4">내 여행 계획 세우기</h2>
+          <p class="text-center mb-4">나만의 여행 계획을 세워보세요!</p>
         </div>
           <div class="container pe-4">
             <div class="row">
@@ -70,7 +70,10 @@
               </div>
               <div class="col-lg-3">
                 <div class="sidebar row h-100 d-flex text-center justify-content-center py-1">
-                  <div class="sidebar-title">여행 계획</div>
+                  <div>
+                    <div class="sidebar-title">여행 계획</div>
+                    <input type="text" class="form-control col-auto" id="plan-title" placeholder="여행 계획 제목"/>
+                  </div>
                   <div class="row">
                     <div
                       class="w-100 px-1"
@@ -284,51 +287,85 @@ function addPlanBtn(marker, place){
   planInfoDiv.addEventListener("dragstart", () => handlerDragStart(planInfoDiv));
   planInfoDiv.addEventListener("dragend", () => handlerDragEnd(planInfoDiv));
 
+  const planInfoContentDiv = document.createElement("div");
+  planInfoContentDiv.setAttribute("class", "row");
 
-  let planInfoPlace = `
-    <div class="text-start border py-1 rounded-2 my-1 placeList-item draggable"
-          draggable="true"
-          ondragstart="handlerDragStart(this)"
-          ondragend="handlerDragEnd(this)">
-      <div class="row">
-        <div class="col-md-5 pe-1">
-          <img src=\${img} class="img-fluid"/>
-        </div>
-        <div class="col-md-7 ps-0">
-          <div class="fw-bold text-truncate" id="place-title" style="background:#eee; margin-top:-0.21rem; border-radius:0 0.2rem 0 0; font-size:0.8rem">
-            \${place.title}
-          </div>
-          <div class="mt-1">
-            <div style="font-size:0.3em">-\${place.address}</div>
-            <div style="font-size:0.2em">-\${tel}</div>
-          </div>
-        </div>
-        </div class="mx-5">
-          <textarea class="form-control my-1" placeholder="간단 메모" style="font-size: 0.3em"></textarea>
-          <div class="row d-flex justify-content-between align-items-center px-1" style="font-size:0.7em">
-            <div class="col-auto" id="info-url" style="color:blue">
-              <a href="http://data.visitkorea.or.kr/resource/\${place.contentId}" target="_blank">상세보기</a>
-            </div>
-            <button class="col-auto btn btn-sm btn-danger me-2" id="\${uuid}" style="font-size:0.7rem">삭제</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  placeList.innerHTML += planInfoPlace;
-  // document.getElementById(uuid).addEventListener("click", function(){
-  //   removePlanPlace(uuid);
-  //   const parentEl = this.closest("#add-place-list > div");
-  //   placeList.removeChild(parentEl);
-  // });
-  planListUUID.forEach((item) => {
-    document.getElementById(item).addEventListener("click", function(){
-      removePlanPlace(item);
+  const planInfoImgDiv = document.createElement("div");
+  planInfoImgDiv.setAttribute("class", "col-md-5 pe-1");
+
+  const planInfoImg = document.createElement("img");
+  planInfoImg.setAttribute("src", img);
+  planInfoImg.setAttribute("class", "img-fluid");
+  planInfoImgDiv.appendChild(planInfoImg);
+  planInfoContentDiv.appendChild(planInfoImgDiv);
+
+  const planInfoRightDiv = document.createElement("div");
+  planInfoRightDiv.setAttribute("class", "col-md-7 ps-0");
+
+  const planInfoTitleDiv = document.createElement("div");
+  planInfoTitleDiv.setAttribute("class", "fw-bold text-truncate");
+  planInfoTitleDiv.setAttribute("id", "place-title");
+  planInfoTitleDiv.style = "background:#eee; margin-top:-0.21rem; border-radius:0 0.2rem 0 0; font-size:0.8rem";
+  planInfoTitleDiv.innerText = place.title;
+  planInfoRightDiv.appendChild(planInfoTitleDiv);
+
+  const planInfoEtc = document.createElement("div");
+  planInfoEtc.setAttribute("class", "mt-1");
+
+  const planInfoAddr = document.createElement("div");
+  planInfoAddr.style = "font-size:0.3em";
+  planInfoAddr.innerText = place.address;
+  planInfoEtc.appendChild(planInfoAddr);
+
+  const planInfoTel = document.createElement("div");
+  planInfoTel.style = "font-size:0.2em";
+  planInfoTel.innerText = tel;
+  planInfoEtc.appendChild(planInfoTel);
+  planInfoRightDiv.appendChild(planInfoEtc);
+  planInfoContentDiv.appendChild(planInfoRightDiv);
+
+  const planInfoEventDiv = document.createElement("div");
+  planInfoEventDiv.setAttribute("class", "px-3");
+
+  const planInfoTextArea = document.createElement("textarea");
+  planInfoTextArea.setAttribute("class", "form-control my-1 plan-place-memo");
+  planInfoTextArea.placeholder = "간단 메모";
+  planInfoTextArea.style = "font-size: 0.3em";
+  planInfoEventDiv.appendChild(planInfoTextArea);
+
+  const planInfoBtnDiv = document.createElement("div");
+  planInfoBtnDiv.setAttribute("class", "row d-flex justify-content-between align-items-center px-1");
+  planInfoBtnDiv.style = "font-size:0.7em";
+
+  const planInfoLinkDiv = document.createElement("div");
+  planInfoLinkDiv.setAttribute("class", "col-auto");
+  planInfoLinkDiv.setAttribute("id", "info-url");
+  planInfoLinkDiv.style = "color:blue";
+
+  const planInfoLink = document.createElement("a");
+  planInfoLink.href = "http://data.visitkorea.or.kr/resource/"+place.contentId;
+  planInfoLink.target = "_blank";
+  planInfoLink.innerText = "상세보기";
+  planInfoLinkDiv.appendChild(planInfoLink);
+  planInfoBtnDiv.appendChild(planInfoLinkDiv);
+
+  const planInfoDelBtn = document.createElement("button");
+  planInfoDelBtn.setAttribute("class", "col-auto btn btn-sm btn-danger me-2");
+  planInfoDelBtn.setAttribute("id", uuid);
+  planInfoDelBtn.style = "font-size:0.7rem";
+  planInfoDelBtn.innerText = "삭제";
+  planInfoDelBtn.addEventListener("click", function(){
+      removePlanPlace(uuid);
       console.log(linePath, planMarker);
       const parentEl = this.closest("#add-place-list > div");
       placeList.removeChild(parentEl);
-    });
   });
+  planInfoBtnDiv.appendChild(planInfoDelBtn);
+  planInfoEventDiv.appendChild(planInfoBtnDiv);
+  planInfoContentDiv.appendChild(planInfoEventDiv);
+  planInfoDiv.appendChild(planInfoContentDiv);
+
+  placeList.appendChild(planInfoDiv);
 }
 
 // 콘텐츠 정보 표시 tag 설정
@@ -416,6 +453,13 @@ function makeInfo(marker, place) {
 
 	return infoDiv;
 }
+
+document.querySelector("#save-plan-btn").addEventListener("click", () => {
+  let title = document.querySelector("#plan-title").value;
+  let contentList = planPlace.map((place) => place.contentId);
+  let memoList = Array.from(document.querySelectorAll(".plan-place-memo")).map((el) => el.value);
+  console.log(memoList);
+});
 
 // Place List Item Event
 function handlerDragStart(e){

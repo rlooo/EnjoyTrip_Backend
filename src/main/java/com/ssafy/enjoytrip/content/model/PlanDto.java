@@ -6,7 +6,7 @@ public class PlanDto {
     private String userId;
     private String title;
     private List<String> contentList;
-    private String memo;
+    private List<String> memo;
 
     public String getUserId() {
         return userId;
@@ -32,11 +32,11 @@ public class PlanDto {
         this.contentList = contentList;
     }
 
-    public String getMemo() {
+    public List<String> getMemo() {
         return memo;
     }
 
-    public void setMemo(String memo) {
+    public void setMemo(List<String> memo) {
         this.memo = memo;
     }
 

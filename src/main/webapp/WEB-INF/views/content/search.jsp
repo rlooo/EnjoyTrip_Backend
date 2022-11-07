@@ -38,8 +38,8 @@
     <!-- body -->
     <section id="blog" class="blog mt-3" style="padding-top: 0">
       <div class="title">
-        <h2 class="text-center mt-5">지역으로 찾기</h2>
-        <p class="text-center mb-5">가고 싶은 여행 지역을 찾아보세요!</p>
+        <h2 class="text-center mt-4">지역으로 찾기</h2>
+        <p class="text-center mb-4">가고 싶은 여행 지역을 찾아보세요!</p>
       </div>
 	<div class="container">
 		<div id="map" style="width: 100%; min-height: 700px">

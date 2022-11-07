@@ -30,21 +30,21 @@ import com.ssafy.enjoytrip.user.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 @RequestMapping("/user")
 public class SocialController {
 	private final Logger logger = LoggerFactory.getLogger(SocialController.class);
 
 	private final SocialService socialService;
 	private final UserService userService;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	// private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final Environment env;
 
 	@Autowired
 	public SocialController(SocialService socialService, UserService userService, Environment env) {
 		this.socialService = socialService;
 		this.userService = userService;
-//		this.bCryptPasswordEncoder=bCryptPasswordEncoder;
+		// this.bCryptPasswordEncoder=bCryptPasswordEncoder;
 		this.env = env;
 	}
 
@@ -75,7 +75,7 @@ public class SocialController {
 		System.out.println(env.getProperty("token.expiration_time"));
 		// JWT 토큰 생성
 		String token = JWT.create().withSubject("JwtToken")
-				.withExpiresAt(new Date(System.currentTimeMillis() +60*60*2)) // 파기일
+				.withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 2)) // 파기일
 				.withClaim("emailId", loginUser.getEmailId()).sign(Algorithm.HMAC512("enjoytrip"));
 		System.out.println(token);
 		// JWT 토큰 헤더에 담아 전달
