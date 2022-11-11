@@ -39,7 +39,7 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping(value="/view/{userid}")
+	@GetMapping(value="/{userid}")
 	public ResponseEntity<?> getUser(@PathVariable("userid") String userId){
 		logger.debug("getUser userid: {}", userId);
 		try {
@@ -55,7 +55,7 @@ public class UserController {
 	}
 	
 	@Transactional
-	@PostMapping(value="/regist")
+	@PostMapping()
 	public ResponseEntity<?> regist(@RequestBody UserDto userDto) {
 		logger.debug("userRegister userDto : {}", userDto);
 		try {
@@ -68,7 +68,7 @@ public class UserController {
 	}
 
 	@Transactional
-	@PutMapping(value="/modify")
+	@PutMapping()
 	public ResponseEntity<?> modify(@RequestBody UserDto userDto) {
 		logger.debug("userModify userDto : {}", userDto);
 		try {
@@ -82,7 +82,7 @@ public class UserController {
 	}
 	
 	@Transactional
-	@DeleteMapping(value = "/delete/{userid}")
+	@DeleteMapping(value = "/{userid}")
 	public ResponseEntity<?> userDelete(@PathVariable("userid") String userId) {
 		logger.debug("userDelete userid : {}", userId);
 		try {
