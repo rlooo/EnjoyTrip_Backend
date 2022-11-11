@@ -19,18 +19,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 //@RequiredArgsConstructor
 public class SocialService {
-	
-	
+
     private final KakaoService kakaoService;
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public SocialService(KakaoService kakaoService) {
-    	this.kakaoService = kakaoService;
+        this.kakaoService = kakaoService;
     }
-    
-    
-    public UserDto verificationKakao(String code){
+
+    public UserDto verificationKakao(String code) {
 
         UserDto userDto = new UserDto();
         // 코드를 이용하여 accessToken 추출
@@ -39,22 +37,21 @@ public class SocialService {
         String userInfo = kakaoService.getUserInfoByAccessToken(accessToken);
 
         try {
-            JsonNode jsonNode = objectMapper.readTree(userInfo); //json 형태로 바꿔줌
+            JsonNode jsonNode = objectMapper.readTree(userInfo); // json 형태로 바꿔줌
             String email = String.valueOf(jsonNode.get("kakao_account").get("email"));
-      
+
             String[] emails = String.valueOf(jsonNode.get("kakao_account").get("email")).split("@");
             String emailId = emails[0].replaceAll("\"", "");
             String emailDomain = emails[1].replaceAll("\"", "");
-            
+
             userDto.setEmailId(emailId);
             userDto.setEmailDomain(emailDomain);
 
-            
             String name = String.valueOf(jsonNode.get("kakao_account").get("profile").get("nickname"));
             userDto.setUserName(name.substring(1, name.length() - 1));
-            
+
             userDto.setUserId(emailId);
-            
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -62,4 +59,3 @@ public class SocialService {
         return userDto;
     }
 }
-

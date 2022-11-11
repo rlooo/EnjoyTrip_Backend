@@ -3,10 +3,18 @@ package com.ssafy.enjoytrip.content.model;
 import java.util.List;
 
 public class PlanDto {
+    private int articleNo;
     private String userId;
     private String title;
-    private List<String> contentList;
-    private String memo;
+    private List<PlanPlaceDto> contentList;
+
+    public int getArticleNo() {
+        return articleNo;
+    }
+
+    public void setArticleNo(int articleNo) {
+        this.articleNo = articleNo;
+    }
 
     public String getUserId() {
         return userId;
@@ -24,20 +32,12 @@ public class PlanDto {
         this.title = title;
     }
 
-    public List<String> getContentList() {
+    public List<PlanPlaceDto> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<String> contentList) {
+    public void setContentList(List<PlanPlaceDto> contentList) {
         this.contentList = contentList;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
     }
 
 }

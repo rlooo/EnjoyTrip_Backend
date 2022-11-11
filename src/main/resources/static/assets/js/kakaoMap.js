@@ -32,6 +32,7 @@ function connectKakaoMap(lat, lon) {
   };
   // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
   map = new kakao.maps.Map(mapContainer, mapOption);
+
   const currentMarker = new kakao.maps.LatLng(lat, lon);
 
   // 마커를 생성합니다
@@ -43,9 +44,9 @@ function connectKakaoMap(lat, lon) {
   // marker.setMap(map);
 }
 
-function closeInfo() {
-  if (infoList) {
-    infoList.forEach((item) => {
+function closeInfo(infoWindows) {
+  if (infoWindows.length > 0) {
+    infoWindows.forEach((item) => {
       item.close();
     });
   }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ssafy.enjoytrip.content.model.AreaDto;
 import com.ssafy.enjoytrip.content.model.PlaceDto;
+import com.ssafy.enjoytrip.content.model.PlanDto;
 import com.ssafy.enjoytrip.content.model.SigunguDto;
 
 public interface ContentService {
@@ -17,4 +18,6 @@ public interface ContentService {
     List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws Exception;
 
     List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception;
+
+    void writePlan(PlanDto planDto) throws Exception;
 }
