@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.board.model;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 public class FileInfoDto {
 
 	private String saveFolder;

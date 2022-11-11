@@ -5,6 +5,23 @@
 * License: https://bootstrapmade.com/license/
 */
 
+::-webkit-scrollbar {
+  width: 0.9em;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 0.5em;
+}
+
+/* ::-webkit-scrollbar-thumb:active {
+  width: 1.2em;
+} */
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/

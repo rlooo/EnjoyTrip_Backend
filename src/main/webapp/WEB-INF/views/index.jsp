@@ -98,11 +98,11 @@
 	<!-- main -->
 	<main id="main"> <!-- ======= carousel Section ======= -->
 	<div id="carouselExampleFade"
-		class="carousel slide carousel-fade carousel-box"
+		class="carousel slide carousel-fade carousel-box" style="margin-top:150px" 
 		data-bs-ride="carousel">
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img src="${root}/assets/img/Nature Full HD Wallpapers 111.jpg"
+				<img src="${root}/assets/img/index.jpg"
 					class="d-block w-100" alt="travel01" />
 			</div>
 			<div class="carousel-item">
@@ -116,7 +116,7 @@
 		</div>
 	</div>
 
-	<p class="mockup-title">오늘의 추천 여행지</p>
+	<p class="mockup-title mt-5">오늘의 추천 여행지</p>
 	<div class="mockup">
 		<div class="card " style="width: 25rem;">
 			<img src="./assets/img/mockup/bridge-gf257c3659_640.jpg"
@@ -159,7 +159,7 @@
 			</div>
 		</div>
 	</div>
-	<p class="mockup-title">인스타그램 감성의 여행지 추천</p>
+	<p class="mockup-title mt-5">인스타그램 감성의 여행지 추천</p>
 	<div class="mockup">
 		<div class="card " style="width: 25rem;">
 			<img src="./assets/img/mockup/hallstatt-g4764ed4a3_640.jpg"
@@ -202,7 +202,7 @@
 			</div>
 		</div>
 	</div>
-	<p class="mockup-title">기차로 떠나는 여행지 추천</p>
+	<p class="mockup-title mt-5">기차로 떠나는 여행지 추천</p>
 	<div class="mockup">
 		<div class="card " style="width: 25rem;">
 			<img src="./assets/img/mockup/mountains-g02f7e3e10_640.jpg"

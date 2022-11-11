@@ -58,7 +58,7 @@ public class BoardController {
 		this.boardService = boardService;
 	}
 
-	@GetMapping(value = "/list")
+	@GetMapping()
 	public ResponseEntity<?> list() {
 		logger.debug("boardList call");
 
@@ -80,16 +80,15 @@ public class BoardController {
 
 	}
 	@Transactional
-	@PostMapping(value = "/write")
-	public ResponseEntity<?> write(@Value("${file.path.upload-files}") String filePath, @RequestBody BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
+	@PostMapping()
+	public ResponseEntity<?> write(@Value("${file.path.upload-files}") String filePath, BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("boardRegister boardDto : {}", boardDto);
 
 		try {
 //			FileUpload 관련 설정.
 			logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
 			if (!files[0].isEmpty()) {
-//				String realPath = servletContext.getRealPath("/upload");
-//				String realPath = servletContext.getRealPath("/resources/img");
+
 				String today = new SimpleDateFormat("yyMMdd").format(new Date());
 				String saveFolder = filePath + File.separator + today;
 				logger.debug("저장 폴더 : {}", saveFolder);
@@ -110,21 +109,21 @@ public class BoardController {
 						mfile.transferTo(new File(folder, saveFileName));
 					}
 					fileInfos.add(fileInfoDto);
+					
 				}
 				boardDto.setFileInfos(fileInfos);
 			}
 			
 			
 			boardService.writeBoard(boardDto);
-			List<BoardDto> list = boardService.getBoardList(null);
-			return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
 
 	@Transactional
-	@GetMapping(value = "/view/{articleno}")
+	@GetMapping(value = "/{articleno}")
 	public ResponseEntity<?> view(@PathVariable("articleno") int articleNo) throws Exception {
 		logger.debug("boardView articleNo : {}", articleNo);
 		try {
@@ -141,7 +140,7 @@ public class BoardController {
 	}
 
 	@Transactional
-	@PutMapping(value = "/modify")
+	@PutMapping()
 	public ResponseEntity<?> modify(@RequestBody BoardDto boardDto) {
 		logger.debug("boardModify boardDto : {}", boardDto);
 		try {
@@ -155,7 +154,7 @@ public class BoardController {
 	}
 
 	@Transactional
-	@DeleteMapping(value = "/delete/{articleno}")
+	@DeleteMapping(value = "/{articleno}")
 	public ResponseEntity<?> boardDelete(@PathVariable("articleno") int articleNo) {
 		logger.debug("boardDelete articleNo : {}", articleNo);
 		try {

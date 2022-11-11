@@ -23,6 +23,10 @@ public class BoardServiceImpl implements BoardService {
 	public void writeBoard(BoardDto boardDto) throws Exception {
 		System.out.println("글입력 전 dto : " + boardDto);
 		boardMapper.writeBoard(boardDto);
+		
+		boardMapper.registerFile(boardDto);
+		
+		
 		System.out.println("글입력 후 dto : " + boardDto);
 
 	}
