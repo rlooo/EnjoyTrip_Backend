@@ -17,7 +17,7 @@ import com.ssafy.enjoytrip.user.model.UserDto;
 import lombok.RequiredArgsConstructor;
 
 @Service
-// @RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class SocialService {
 
     private final KakaoService kakaoService;

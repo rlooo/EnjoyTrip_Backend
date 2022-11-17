@@ -1,3 +1,11 @@
+/* Custom */
+
+#add-place-list::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Default */
+
 body {
   font-family: "Open Sans", sans-serif;
   color: #313030;

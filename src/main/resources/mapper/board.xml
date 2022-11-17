@@ -54,7 +54,7 @@
 
 	<select id="getBoardList" parameterType="map" resultMap="board">
 		select b.article_no, b.user_id, b.title, b.content, b.hit,
-		b.regist_date, b.is_notice,
+		date_format(b.regist_date, '%Y.%m.%d') as regist_date, b.is_notice,
 		u.user_name
 		from board b, user u
 		where

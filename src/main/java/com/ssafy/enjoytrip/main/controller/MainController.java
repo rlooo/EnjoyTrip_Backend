@@ -24,6 +24,11 @@ public class MainController {
     public String mvBoard() {
         return "/board/board_list";
     }
+    
+    @GetMapping("/mvboard/write")
+    public String mvBoardWrite() {
+        return "/board/board_wirte";
+    }
 
     @GetMapping("/mvlogin")
     public String mvLogin() {
