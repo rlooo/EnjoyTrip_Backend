@@ -56,7 +56,7 @@ public class SocialController {
 		System.out.println(loginUser.getUserName());
 		UserDto user = null;
 		try {
-			user = userService.getUser(loginUser.getEmailId());
+			user = userService.getUser(loginUser.getEmail());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +76,7 @@ public class SocialController {
 		// JWT 토큰 생성
 		String token = JWT.create().withSubject("JwtToken")
 				.withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 2)) // 파기일
-				.withClaim("emailId", loginUser.getEmailId()).sign(Algorithm.HMAC512("enjoytrip"));
+				.withClaim("emailId", loginUser.getEmail()).sign(Algorithm.HMAC512("enjoytrip"));
 		System.out.println(token);
 		// JWT 토큰 헤더에 담아 전달
 		response.addHeader("JWT", token);

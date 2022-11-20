@@ -11,8 +11,7 @@
 	<resultMap type="userDto" id="userAll" extends="user">
 		<result column="user_pw" property="userPw" />
 		<result column="user_age" property="userAge" />
-		<result column="email_id" property="emailId" />
-		<result column="email_domain" property="emailDomain" />
+		<result column="email" property="email" />
 		<result column="join_date" property="joinDate" />
 		<result column="profile_img" property="profileImg" />
 		<result column="is_manager" property="isManager" />
@@ -27,10 +26,10 @@
 
 	<insert id="registUser" parameterType="userDto">
 		insert into user
-		(user_name, user_id, user_pw, user_age, email_id, email_domain,
+		(user_name, user_id, user_pw, user_age, email,
 		join_date)
 		values (#{userName}, #{userId}, #{userPw},#{userAge},
-		#{emailId}, #{emailDomain}, now())
+		#{email},now())
 	</insert>
 
 	<!-- <select id="loginMember" parameterType="map" resultMap="member"> select 
@@ -39,7 +38,7 @@
 
 	<select id="getUserList" resultMap="userAll">
 		select user_name, user_id,
-		user_id, user_name, user_pw, user_age, email_id, email_domain, join_date, profile_img, is_manager 
+		user_id, user_name, user_pw, user_age, email, join_date, profile_img, is_manager 
 		from user
 		order by
 		join_date
@@ -47,7 +46,7 @@
 
 	<select id="getUser" parameterType="string" resultMap="userAll">
 		select
-		user_id, user_name, user_pw, user_age, email_id, email_domain, join_date, profile_img, is_manager 
+		user_id, user_name, user_pw, user_age, email, join_date, profile_img, is_manager 
 		from
 		user
 		where user_id = #{userId}
@@ -58,8 +57,7 @@
 		<trim prefix="set" suffixOverrides=",">
 			<if test="userPw != null">user_pw = #{userPw},</if>
 			<if test="userAge != null">user_age = #{userAge},</if>
-			<if test="emailId != null">email_id = #{emailId},</if>
-			<if test="emailDomain != null">email_domain = #{emailDomain},</if>
+			<if test="email!= null">email = #{email},</if>
 			<if test="profileImg != null">profile_img = #{profileImg},</if>
 			<if test="isManager!=null">is_manager=#{isManager},</if>
 		</trim>

@@ -42,10 +42,8 @@ public class SocialService {
 
             String[] emails = String.valueOf(jsonNode.get("kakao_account").get("email")).split("@");
             String emailId = emails[0].replaceAll("\"", "");
-            String emailDomain = emails[1].replaceAll("\"", "");
 
-            userDto.setEmailId(emailId);
-            userDto.setEmailDomain(emailDomain);
+            userDto.setEmail(email);
 
             String name = String.valueOf(jsonNode.get("kakao_account").get("profile").get("nickname"));
             userDto.setUserName(name.substring(1, name.length() - 1));

@@ -8,8 +8,7 @@ public class UserDto {
     private String userName;
     private String userPw;
     private int userAge;
-    private String emailId;
-    private String emailDomain;
+    private String email;
     private String joinDate;
     private String profileImg;
     private int isManager; // 1: Manage, 0: User(default = 0)
@@ -46,20 +45,12 @@ public class UserDto {
         this.userAge = userAge;
     }
 
-    public String getEmailId() {
-        return emailId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
-    }
-
-    public String getEmailDomain() {
-        return emailDomain;
-    }
-
-    public void setEmailDomain(String emailDomain) {
-        this.emailDomain = emailDomain;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getJoinDate() {
@@ -89,7 +80,7 @@ public class UserDto {
 	@Override
 	public String toString() {
 		return "UserDto [userId=" + userId + ", userName=" + userName + ", userPw=" + userPw + ", userAge=" + userAge
-				+ ", emailId=" + emailId + ", emailDomain=" + emailDomain + ", joinDate=" + joinDate + ", profileImg="
+				+ ", email=" + email  + ", joinDate=" + joinDate + ", profileImg="
 				+ profileImg + ", isManager=" + isManager + "]";
 	}
 
