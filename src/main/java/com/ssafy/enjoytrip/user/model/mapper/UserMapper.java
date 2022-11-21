@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.enjoytrip.user.model.UserFileInfoDto;
 import com.ssafy.enjoytrip.user.model.UserDto;
 
 @Mapper
@@ -23,4 +24,16 @@ public interface UserMapper {
     void deleteUser(String userId) throws SQLException;
 
     List<UserDto> getUserList(Map<String, Object> map) throws SQLException;
+    
+    void registerFile(UserDto userDto) throws Exception;
+    
+    void deleteImg(String userId) throws SQLException;
+    
+    List<UserFileInfoDto> fileInfoList(int userId) throws Exception;
+    
+    public UserDto login(UserDto userDto) throws SQLException;
+    
+    public void saveRefreshToken(Map<String, String> map) throws SQLException;
+	public Object getRefreshToken(String userid) throws SQLException;
+	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
 }

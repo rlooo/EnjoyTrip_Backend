@@ -1,5 +1,9 @@
 package com.ssafy.enjoytrip.user.model;
 
+import java.util.List;
+
+import com.ssafy.enjoytrip.user.model.UserFileInfoDto;
+
 import lombok.Data;
 
 @Data
@@ -10,8 +14,8 @@ public class UserDto {
     private int userAge;
     private String email;
     private String joinDate;
-    private String profileImg;
     private int isManager; // 1: Manage, 0: User(default = 0)
+    private List<UserFileInfoDto> fileInfos;
 
     public String getUserId() {
         return userId;
@@ -61,13 +65,13 @@ public class UserDto {
         this.joinDate = joinDate;
     }
 
-    public String getProfileImg() {
-        return profileImg;
-    }
+	public List<UserFileInfoDto> getFileInfos() {
+		return fileInfos;
+	}
 
-    public void setProfileImg(String profileImg) {
-        this.profileImg = profileImg;
-    }
+	public void setFileInfos(List<UserFileInfoDto> fileInfos) {
+		this.fileInfos = fileInfos;
+	}
 
     public int getIsManager() {
         return isManager;
@@ -80,8 +84,10 @@ public class UserDto {
 	@Override
 	public String toString() {
 		return "UserDto [userId=" + userId + ", userName=" + userName + ", userPw=" + userPw + ", userAge=" + userAge
-				+ ", email=" + email  + ", joinDate=" + joinDate + ", profileImg="
-				+ profileImg + ", isManager=" + isManager + "]";
+				+ ", email=" + email + ", joinDate=" + joinDate + ", isManager=" + isManager + ", fileInfos="
+				+ fileInfos + "]";
 	}
+
+
 
 }

@@ -13,10 +13,19 @@
 		<result column="user_age" property="userAge" />
 		<result column="email" property="email" />
 		<result column="join_date" property="joinDate" />
-		<result column="profile_img" property="profileImg" />
 		<result column="is_manager" property="isManager" />
 	</resultMap>
 
+	<resultMap type="userDto" id="userImage" extends="userAll">
+		<collection property="fileInfos" column="user_id" javaType="list" ofType="userFileInfoDto" select="fileInfoList"/>
+	</resultMap>
+	
+		<resultMap type="userFileInfoDto" id="file">
+		<result column="save_folder" property="saveFolder"/>
+		<result column="original_file" property="originalFile"/>
+		<result column="save_file" property="saveFile"/>
+	</resultMap>
+	
 	<select id="idCheck" parameterType="String" resultType="int">
 		select
 		count(user_id)
@@ -31,6 +40,14 @@
 		values (#{userName}, #{userId}, #{userPw},#{userAge},
 		#{email},now())
 	</insert>
+	
+	<insert id="registerFile" parameterType="userDto">
+		insert into user_img_file_info (user_id, save_folder, original_file, save_file)
+		values
+		<foreach collection="fileInfos" item="userFileInfoDto" separator=" , ">
+			(#{userId}, #{userFileInfoDto.saveFolder}, #{userFileInfoDto.originalFile}, #{userFileInfoDto.saveFile})
+		</foreach>
+	</insert>
 
 	<!-- <select id="loginMember" parameterType="map" resultMap="member"> select 
 		user_id, user_name from members where user_id = #{userid} and user_password 
@@ -38,7 +55,7 @@
 
 	<select id="getUserList" resultMap="userAll">
 		select user_name, user_id,
-		user_id, user_name, user_pw, user_age, email, join_date, profile_img, is_manager 
+		user_id, user_name, user_pw, user_age, email, join_date, is_manager 
 		from user
 		order by
 		join_date
@@ -46,7 +63,7 @@
 
 	<select id="getUser" parameterType="string" resultMap="userAll">
 		select
-		user_id, user_name, user_pw, user_age, email, join_date, profile_img, is_manager 
+		user_id, user_name, user_pw, user_age, email, join_date,  is_manager 
 		from
 		user
 		where user_id = #{userId}
@@ -58,7 +75,6 @@
 			<if test="userPw != null">user_pw = #{userPw},</if>
 			<if test="userAge != null">user_age = #{userAge},</if>
 			<if test="email!= null">email = #{email},</if>
-			<if test="profileImg != null">profile_img = #{profileImg},</if>
 			<if test="isManager!=null">is_manager=#{isManager},</if>
 		</trim>
 		where user_id = #{userId}
@@ -69,4 +85,40 @@
 		where
 		user_id = #{userId}
 	</delete>
+	
+	<delete id="deleteImg" parameterType="String">
+		delete from user_img_file_info
+		where
+		user_id = #{UserId}
+	</delete>
+	
+	<select id="fileInfoList" resultMap="file">
+		select save_folder, original_file, save_file
+		from user_img_file_info
+		where user_id = #{userId}
+	</select>
+	
+	<select id="login" parameterType="userDto" resultType="userDto">
+	select user_name, user_id, email
+	from user
+	where where user_id = #{userId} and user_pw = #{userPw}
+	</select>
+	
+	<select id="getRefreshToken" parameterType="string" resultType="string">
+		select token
+		from user
+		where user_id = #{userid}
+	</select>
+	
+	<update id="saveRefreshToken" parameterType="map">
+		update ssafy_member
+		set token = #{token}
+		where user_id = #{userId}
+	</update>
+	
+	<update id="deleteRefreshToken" parameterType="map">
+		update user
+		set token = #{token, jdbcType=VARCHAR}
+		where user_id = #{userId}
+	</update>
 </mapper>

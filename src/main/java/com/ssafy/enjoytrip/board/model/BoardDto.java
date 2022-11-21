@@ -10,7 +10,7 @@ public class BoardDto {
     private int hit;
     private String registDate;
     private int isNotice;
-    private List<FileInfoDto> fileInfos;
+    private List<BoardFileInfoDto> fileInfos;
 
     public int getArticleNo() {
         return articleNo;
@@ -72,11 +72,11 @@ public class BoardDto {
         this.isNotice = isNotice;
     }
     
-	public List<FileInfoDto> getFileInfos() {
+	public List<BoardFileInfoDto> getFileInfos() {
 		return fileInfos;
 	}
 
-	public void setFileInfos(List<FileInfoDto> fileInfos) {
+	public void setFileInfos(List<BoardFileInfoDto> fileInfos) {
 		this.fileInfos = fileInfos;
 	}
 

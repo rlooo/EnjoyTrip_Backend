@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registUser(UserDto userDto) throws Exception {
     	userMapper.registUser(userDto);
+    	userMapper.registerFile(userDto);
     }
 
     @Override
@@ -40,11 +41,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDto userDto) throws Exception {
+    	userMapper.deleteImg(userDto.getUserId());
     	userMapper.updateUser(userDto);
+    	userMapper.registerFile(userDto);
     }
 
     @Override
     public void deleteUser(String userId) throws Exception {
+    	userMapper.deleteImg(userId);
     	userMapper.deleteUser(userId);
     }
 
@@ -52,5 +56,29 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUserList(Map<String, Object> map) throws Exception {
         return userMapper.getUserList(map);
     }
+
+	@Override
+	public UserDto login(UserDto userDto) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Object getRefreshToken(String userid) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleRefreshToken(String userid) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -2,7 +2,7 @@ package com.ssafy.enjoytrip.board.model;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-public class FileInfoDto {
+public class BoardFileInfoDto {
 
 	private String saveFolder;
 	private String originalFile;

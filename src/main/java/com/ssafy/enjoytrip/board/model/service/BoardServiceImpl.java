@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
+import com.ssafy.enjoytrip.board.model.BoardFileInfoDto;
 import com.ssafy.enjoytrip.board.model.mapper.BoardMapper;
 
 @Service
@@ -33,7 +34,14 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<BoardDto> getBoardList(Map<String, Object> map) throws Exception {
-		return boardMapper.getBoardList(map);
+		List<BoardDto> list =  boardMapper.getBoardList(map);
+		
+		for(int i=0;i<list.size();i++) {
+			List<BoardFileInfoDto> fileInfos =  boardMapper.fileInfoList(list.get(i).getArticleNo());
+			list.get(i).setFileInfos(fileInfos);
+			
+		}
+		return list;
 	}
 
 	@Override
@@ -44,16 +52,15 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void modifyBoard(BoardDto boardDto) throws Exception {
+		boardMapper.deleteImg(boardDto.getArticleNo());
 		boardMapper.modifyBoard(boardDto);
+		boardMapper.registerFile(boardDto);
 	}
 
-	@Override
-	public void deleteImg(int articleNo) throws Exception {
-		boardMapper.deleteImg(articleNo);
-	}
 
 	@Override
 	public void deleteBoard(int articleNo) throws Exception {
+		boardMapper.deleteImg(articleNo);
 		boardMapper.deleteBoard(articleNo);
 	}
 
@@ -62,5 +69,12 @@ public class BoardServiceImpl implements BoardService {
 	public void updateHit(int articleNo) throws Exception {
 		boardMapper.updateHit(articleNo);
 	}
+
+	@Override
+	public List<BoardFileInfoDto> fileInfoList(int articleNo) throws Exception {
+		return boardMapper.fileInfoList(articleNo);
+	}
+	
+
 
 }

@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
-import com.ssafy.enjoytrip.board.model.FileInfoDto;
+import com.ssafy.enjoytrip.board.model.BoardFileInfoDto;
 import com.ssafy.enjoytrip.board.model.service.BoardService;
 import com.ssafy.enjoytrip.util.PageNavigation;
 
@@ -95,9 +95,9 @@ public class BoardController {
 				File folder = new File(saveFolder);
 				if (!folder.exists())
 					folder.mkdirs();
-				List<FileInfoDto> fileInfos = new ArrayList<FileInfoDto>();
+				List<BoardFileInfoDto> fileInfos = new ArrayList<BoardFileInfoDto>();
 				for (MultipartFile mfile : files) {
-					FileInfoDto fileInfoDto = new FileInfoDto();
+					BoardFileInfoDto fileInfoDto = new BoardFileInfoDto();
 					String originalFileName = mfile.getOriginalFilename();
 					if (!originalFileName.isEmpty()) {
 						String saveFileName = System.nanoTime()
@@ -128,7 +128,9 @@ public class BoardController {
 		logger.debug("boardView articleNo : {}", articleNo);
 		try {
 			BoardDto boardDto = boardService.getBoard(articleNo);
+			List<BoardFileInfoDto> fileInfos = boardService.fileInfoList(articleNo);
 			boardService.updateHit(articleNo);
+			boardDto.setFileInfos(fileInfos);
 			if (boardDto != null)
 				return new ResponseEntity<BoardDto>(boardDto, HttpStatus.OK);
 			else
@@ -141,12 +143,48 @@ public class BoardController {
 
 	@Transactional
 	@PutMapping()
-	public ResponseEntity<?> modify(@RequestBody BoardDto boardDto) {
+	public ResponseEntity<?> modify(@Value("${file.path.upload-files}") String filePath, BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("boardModify boardDto : {}", boardDto);
+//		try {
+//			boardService.modifyBoard(boardDto);
+//			List<BoardDto> list = boardService.getBoardList(null);
+//			return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+//		} catch (Exception e) {
+//			return exceptionHandling(e);
+//		}
 		try {
+//			FileUpload 관련 설정.
+			logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
+			if (!files[0].isEmpty()) {
+
+				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+				String saveFolder = filePath + File.separator + today;
+				logger.debug("저장 폴더 : {}", saveFolder);
+				File folder = new File(saveFolder);
+				if (!folder.exists())
+					folder.mkdirs();
+				List<BoardFileInfoDto> fileInfos = new ArrayList<BoardFileInfoDto>();
+				for (MultipartFile mfile : files) {
+					BoardFileInfoDto fileInfoDto = new BoardFileInfoDto();
+					String originalFileName = mfile.getOriginalFilename();
+					if (!originalFileName.isEmpty()) {
+						String saveFileName = System.nanoTime()
+								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+						fileInfoDto.setSaveFolder(today);
+						fileInfoDto.setOriginalFile(originalFileName);
+						fileInfoDto.setSaveFile(saveFileName);
+						logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+						mfile.transferTo(new File(folder, saveFileName));
+					}
+					fileInfos.add(fileInfoDto);
+					
+				}
+				boardDto.setFileInfos(fileInfos);
+			}
+			
+			
 			boardService.modifyBoard(boardDto);
-			List<BoardDto> list = boardService.getBoardList(null);
-			return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

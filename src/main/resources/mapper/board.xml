@@ -14,10 +14,10 @@
 	</resultMap>
 	
 	<resultMap type="boardDto" id="viewArticle" extends="board">
-		<collection property="fileInfos" column="article_no" javaType="list" ofType="fileInfoDto" select="fileInfoList"/>
+		<collection property="fileInfos" column="article_no" javaType="list" ofType="boardFileInfoDto" select="fileInfoList"/>
 	</resultMap>
 	
-	<resultMap type="fileInfoDto" id="file">
+	<resultMap type="boardFileInfoDto" id="file">
 		<result column="save_folder" property="saveFolder"/>
 		<result column="original_file" property="originalFile"/>
 		<result column="save_file" property="saveFile"/>
@@ -34,10 +34,10 @@
 	</insert>
 	
 	<insert id="registerFile" parameterType="boardDto">
-		insert into img_file_info (article_no, save_folder, original_file, save_file)
+		insert into board_img_file_info (article_no, save_folder, original_file, save_file)
 		values
-		<foreach collection="fileInfos" item="fileinfo" separator=" , ">
-			(#{articleNo}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
+		<foreach collection="fileInfos" item="boardFileinfo" separator=" , ">
+			(#{articleNo}, #{boardFileinfo.saveFolder}, #{boardFileinfo.originalFile}, #{boardFileinfo.saveFile})
 		</foreach>
 	</insert>
 
@@ -107,14 +107,14 @@
 	</delete>
 
 	<delete id="deleteImg" parameterType="int">
-		delete from img_file_info
+		delete from board_img_file_info
 		where
 		article_no = #{articleNo}
 	</delete>
 	
 	<select id="fileInfoList" resultMap="file">
 		select save_folder, original_file, save_file
-		from img_file_info
+		from board_img_file_info
 		where article_no = #{articleNo}
 	</select>
 

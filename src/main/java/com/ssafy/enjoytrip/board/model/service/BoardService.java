@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssafy.enjoytrip.board.model.BoardDto;
+import com.ssafy.enjoytrip.board.model.BoardFileInfoDto;
 import com.ssafy.enjoytrip.util.PageNavigation;
 
 public interface BoardService {
@@ -15,9 +16,8 @@ public interface BoardService {
 
 	void modifyBoard(BoardDto boardDto) throws Exception;
 
-	void deleteImg(int articleNo) throws Exception;
 
 	void deleteBoard(int articleNo) throws Exception;
-
 	void updateHit(int articleNo) throws Exception;
+	List<BoardFileInfoDto> fileInfoList(int articleNo) throws Exception;
 }
