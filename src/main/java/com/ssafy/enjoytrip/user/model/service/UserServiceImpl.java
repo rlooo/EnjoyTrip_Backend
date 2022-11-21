@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.user.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registUser(UserDto userDto) throws Exception {
-    	userMapper.registUser(userDto);
-    	userMapper.registerFile(userDto);
+        userMapper.registUser(userDto);
+        userMapper.registerFile(userDto);
     }
 
     @Override
@@ -40,16 +41,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUserInfo(String userId) throws Exception {
+        return userMapper.getUserInfo(userId);
+    }
+
+    @Override
     public void updateUser(UserDto userDto) throws Exception {
-    	userMapper.deleteImg(userDto.getUserId());
-    	userMapper.updateUser(userDto);
-    	userMapper.registerFile(userDto);
+        userMapper.deleteImg(userDto.getUserId());
+        userMapper.updateUser(userDto);
+        userMapper.registerFile(userDto);
     }
 
     @Override
     public void deleteUser(String userId) throws Exception {
-    	userMapper.deleteImg(userId);
-    	userMapper.deleteUser(userId);
+        userMapper.deleteImg(userId);
+        userMapper.deleteUser(userId);
     }
 
     @Override
@@ -57,28 +63,33 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserList(map);
     }
 
-	@Override
-	public UserDto login(UserDto userDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public UserDto login(UserDto userDto) throws Exception {
+        if (userDto.getUserId() == null || userDto.getUserPw() == null) {
+            return null;
+        }
+        return userMapper.login(userDto);
+    }
 
-	@Override
-	public void saveRefreshToken(String userid, String refreshToken) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void saveRefreshToken(String userId, String refreshToken) throws Exception {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", userId);
+        map.put("token", refreshToken);
+        userMapper.saveRefreshToken(map);
+    }
 
-	@Override
-	public Object getRefreshToken(String userid) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Object getRefreshToken(String userId) throws Exception {
+        return userMapper.getRefreshToken(userId);
+    }
 
-	@Override
-	public void deleRefreshToken(String userid) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void deleRefreshToken(String userId) throws Exception {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", userId);
+        map.put("token", null);
+        userMapper.saveRefreshToken(map);
+    }
 
 }

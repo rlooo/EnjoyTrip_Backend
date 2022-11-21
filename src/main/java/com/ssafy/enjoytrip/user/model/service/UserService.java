@@ -14,17 +14,19 @@ public interface UserService {
 
     UserDto getUser(String userId) throws Exception;
 
+    UserDto getUserInfo(String userId) throws Exception;
+
     void updateUser(UserDto userDto) throws Exception;
 
     void deleteUser(String userId) throws Exception;
 
     List<UserDto> getUserList(Map<String, Object> map) throws Exception;
-    
-    public UserDto login(UserDto userDto) throws Exception;
-    
-    public void saveRefreshToken(String userid, String refreshToken) throws Exception;
 
-    public Object getRefreshToken(String userid) throws Exception;
-    
-	public void deleRefreshToken(String userid) throws Exception;
+    public UserDto login(UserDto userDto) throws Exception;
+
+    public void saveRefreshToken(String userId, String refreshToken) throws Exception;
+
+    public Object getRefreshToken(String userId) throws Exception;
+
+    public void deleRefreshToken(String userId) throws Exception;
 }

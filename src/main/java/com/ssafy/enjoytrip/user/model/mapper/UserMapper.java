@@ -19,21 +19,25 @@ public interface UserMapper {
 
     UserDto getUser(String userId) throws SQLException;
 
+    UserDto getUserInfo(String userId) throws SQLException;
+
     void updateUser(UserDto userDto) throws SQLException;
 
     void deleteUser(String userId) throws SQLException;
 
     List<UserDto> getUserList(Map<String, Object> map) throws SQLException;
-    
+
     void registerFile(UserDto userDto) throws Exception;
-    
+
     void deleteImg(String userId) throws SQLException;
-    
+
     List<UserFileInfoDto> fileInfoList(int userId) throws Exception;
-    
+
     public UserDto login(UserDto userDto) throws SQLException;
-    
+
     public void saveRefreshToken(Map<String, String> map) throws SQLException;
-	public Object getRefreshToken(String userid) throws SQLException;
-	public void deleteRefreshToken(Map<String, String> map) throws SQLException;
+
+    public Object getRefreshToken(String userId) throws SQLException;
+
+    public void deleteRefreshToken(Map<String, String> map) throws SQLException;
 }

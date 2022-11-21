@@ -61,11 +61,18 @@
 		join_date
 	</select>
 
-	<select id="getUser" parameterType="string" resultMap="userAll">
+	<select id="getUser" parameterType="String" resultMap="userAll">
 		select
 		user_id, user_name, user_pw, user_age, email, join_date,  is_manager 
 		from
 		user
+		where user_id = #{userId}
+	</select>
+
+	<select id="getUserInfo" parameterType="String" resultType="userDto">
+		select
+		user_id, user_name, email, join_date
+		from user
 		where user_id = #{userId}
 	</select>
 
@@ -99,19 +106,19 @@
 	</select>
 	
 	<select id="login" parameterType="userDto" resultType="userDto">
-	select user_name, user_id, email
-	from user
-	where where user_id = #{userId} and user_pw = #{userPw}
+		select user_name, user_id, email
+		from user
+		where user_id = #{userId} and user_pw = #{userPw}
 	</select>
 	
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from user
-		where user_id = #{userid}
+		where user_id = #{userId}
 	</select>
 	
 	<update id="saveRefreshToken" parameterType="map">
-		update ssafy_member
+		update user
 		set token = #{token}
 		where user_id = #{userId}
 	</update>
