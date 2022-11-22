@@ -16,6 +16,8 @@ public interface UserMapper {
     UserDto loginUser(Map<String, Object> map) throws SQLException;
 
     void registUser(UserDto userDto) throws SQLException;
+    
+    void modifyUser(UserDto userDto) throws SQLException;
 
     UserDto getUser(String userId) throws SQLException;
 
@@ -31,7 +33,7 @@ public interface UserMapper {
 
     void deleteImg(String userId) throws SQLException;
 
-    List<UserFileInfoDto> fileInfoList(int userId) throws Exception;
+    List<UserFileInfoDto> fileInfoList(String userId) throws Exception;
 
     public UserDto login(UserDto userDto) throws SQLException;
 

@@ -40,6 +40,13 @@
 		values (#{userName}, #{userId}, #{userPw},#{userAge},
 		#{email},now())
 	</insert>
+	
+	<update id="modifyUser" parameterType="userDto">
+		update user
+		set user_name =
+		#{userName}, user_pw = #{userPw}, user_age=#{userAge}, email=#{email}
+		where user_id = #{userId}
+	</update>
 
 	<insert id="registerFile" parameterType="userDto">
 		insert into user_img_file_info (user_id, save_folder, original_file, save_file)

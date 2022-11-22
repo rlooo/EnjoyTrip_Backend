@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.user.model.UserDto;
+import com.ssafy.enjoytrip.user.model.UserFileInfoDto;
 import com.ssafy.enjoytrip.user.model.mapper.UserMapper;
 
 @Service
@@ -91,5 +92,18 @@ public class UserServiceImpl implements UserService {
         map.put("token", null);
         userMapper.saveRefreshToken(map);
     }
+
+	@Override
+	public List<UserFileInfoDto> fileInfoList(String userId) throws Exception {
+		return userMapper.fileInfoList(userId);
+	}
+
+	@Override
+	public void modifyUser(UserDto userDto) throws Exception {
+		userMapper.deleteImg(userDto.getUserId());
+		userMapper.modifyUser(userDto);
+		userMapper.registerFile(userDto);
+		
+	}
 
 }

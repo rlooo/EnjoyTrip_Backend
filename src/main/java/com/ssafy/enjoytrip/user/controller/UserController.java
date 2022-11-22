@@ -60,6 +60,8 @@ public class UserController {
 		logger.debug("getUser userId: {}", userId);
 		try {
 			UserDto userDto = userService.getUser(userId);
+			List<UserFileInfoDto> fileInfos = userService.fileInfoList(userId);
+			userDto.setFileInfos(fileInfos);
 			if (userDto != null)
 				return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
 			else
@@ -73,16 +75,10 @@ public class UserController {
 	// 회원등록
 	@Transactional
 	@PostMapping()
-	public ResponseEntity<?> regist(@Value("${file.path.upload-files}") String filePath, @RequestBody UserDto userDto,
+	public ResponseEntity<?> regist(@Value("${file.path.upload-files}") String filePath, UserDto userDto,
 			@RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("userRegister userDto : {}", userDto);
-		// try {
-		// userService.registUser(userDto);
-		// UserDto user = userService.getUser(userDto.getUserId());
-		// return new ResponseEntity<UserDto>(user, HttpStatus.OK);
-		// } catch (Exception e) {
-		// return exceptionHandling(e);
-		// }
+
 		try {
 			// FileUpload 관련 설정.
 			logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
@@ -122,12 +118,40 @@ public class UserController {
 
 	@Transactional
 	@PutMapping()
-	public ResponseEntity<?> modify(@RequestBody UserDto userDto) {
+	public ResponseEntity<?> modify(@Value("${file.path.upload-files}") String filePath, UserDto userDto, @RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("userModify userDto : {}", userDto);
 		try {
-			userService.updateUser(userDto);
-			UserDto user = userService.getUser(userDto.getUserId());
-			return new ResponseEntity<UserDto>(user, HttpStatus.OK);
+			// FileUpload 관련 설정.
+			logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
+			if (!files[0].isEmpty()) {
+
+				String today = new SimpleDateFormat("yyMMdd").format(new Date());
+				String saveFolder = filePath + File.separator + today;
+				logger.debug("저장 폴더 : {}", saveFolder);
+				File folder = new File(saveFolder);
+				if (!folder.exists())
+					folder.mkdirs();
+				List<UserFileInfoDto> fileInfos = new ArrayList<UserFileInfoDto>();
+				for (MultipartFile mfile : files) {
+					UserFileInfoDto fileInfoDto = new UserFileInfoDto();
+					String originalFileName = mfile.getOriginalFilename();
+					if (!originalFileName.isEmpty()) {
+						String saveFileName = System.nanoTime()
+								+ originalFileName.substring(originalFileName.lastIndexOf('.'));
+						fileInfoDto.setSaveFolder(today);
+						fileInfoDto.setOriginalFile(originalFileName);
+						fileInfoDto.setSaveFile(saveFileName);
+						logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", mfile.getOriginalFilename(), saveFileName);
+						mfile.transferTo(new File(folder, saveFileName));
+					}
+					fileInfos.add(fileInfoDto);
+
+				}
+				userDto.setFileInfos(fileInfos);
+			}
+
+			userService.modifyUser(userDto);
+			return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

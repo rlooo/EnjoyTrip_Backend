@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssafy.enjoytrip.user.model.UserDto;
+import com.ssafy.enjoytrip.user.model.UserFileInfoDto;
 
 public interface UserService {
     int idCheck(String userId) throws Exception;
@@ -11,6 +12,8 @@ public interface UserService {
     UserDto loginUser(Map<String, Object> map) throws Exception;
 
     void registUser(UserDto userDto) throws Exception;
+    
+    void modifyUser(UserDto userDto) throws Exception;
 
     UserDto getUser(String userId) throws Exception;
 
@@ -29,4 +32,6 @@ public interface UserService {
     public Object getRefreshToken(String userId) throws Exception;
 
     public void deleRefreshToken(String userId) throws Exception;
+    
+    List<UserFileInfoDto> fileInfoList (String userId) throws Exception;
 }

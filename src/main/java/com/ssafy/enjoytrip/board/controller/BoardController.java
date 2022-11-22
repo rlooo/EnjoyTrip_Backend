@@ -145,13 +145,7 @@ public class BoardController {
 	@PutMapping()
 	public ResponseEntity<?> modify(@Value("${file.path.upload-files}") String filePath, BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
 		logger.debug("boardModify boardDto : {}", boardDto);
-//		try {
-//			boardService.modifyBoard(boardDto);
-//			List<BoardDto> list = boardService.getBoardList(null);
-//			return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
-//		} catch (Exception e) {
-//			return exceptionHandling(e);
-//		}
+
 		try {
 //			FileUpload 관련 설정.
 			logger.debug("MultipartFile.isEmpty : {}", files[0].isEmpty());
