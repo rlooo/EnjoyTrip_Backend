@@ -17,15 +17,15 @@
 	</resultMap>
 
 	<resultMap type="userDto" id="userImage" extends="userAll">
-		<collection property="fileInfos" column="user_id" javaType="list" ofType="userFileInfoDto" select="fileInfoList"/>
+		<collection property="fileInfos" column="user_id" javaType="list" ofType="userFileInfoDto" select="fileInfoList" />
 	</resultMap>
-	
-		<resultMap type="userFileInfoDto" id="file">
-		<result column="save_folder" property="saveFolder"/>
-		<result column="original_file" property="originalFile"/>
-		<result column="save_file" property="saveFile"/>
+
+	<resultMap type="userFileInfoDto" id="file">
+		<result column="save_folder" property="saveFolder" />
+		<result column="original_file" property="originalFile" />
+		<result column="save_file" property="saveFile" />
 	</resultMap>
-	
+
 	<select id="idCheck" parameterType="String" resultType="int">
 		select
 		count(user_id)
@@ -40,7 +40,7 @@
 		values (#{userName}, #{userId}, #{userPw},#{userAge},
 		#{email},now())
 	</insert>
-	
+
 	<insert id="registerFile" parameterType="userDto">
 		insert into user_img_file_info (user_id, save_folder, original_file, save_file)
 		values
@@ -54,7 +54,7 @@
 		= #{userpwd} </select> -->
 
 	<select id="getUserList" resultMap="userAll">
-		select user_name, user_id,
+		select
 		user_id, user_name, user_pw, user_age, email, join_date, is_manager 
 		from user
 		order by
@@ -69,9 +69,9 @@
 		where user_id = #{userId}
 	</select>
 
-	<select id="getUserInfo" parameterType="String" resultType="userDto">
+	<select id="getUserInfo" parameterType="String" resultMap="userAll">
 		select
-		user_id, user_name, email, join_date
+		user_id, user_name, email, user_age, join_date
 		from user
 		where user_id = #{userId}
 	</select>
@@ -92,37 +92,37 @@
 		where
 		user_id = #{userId}
 	</delete>
-	
+
 	<delete id="deleteImg" parameterType="String">
 		delete from user_img_file_info
 		where
-		user_id = #{UserId}
+		user_id = #{userId}
 	</delete>
-	
+
 	<select id="fileInfoList" resultMap="file">
 		select save_folder, original_file, save_file
 		from user_img_file_info
 		where user_id = #{userId}
 	</select>
-	
-	<select id="login" parameterType="userDto" resultType="userDto">
+
+	<select id="login" parameterType="userDto" resultMap="userAll">
 		select user_name, user_id, email
 		from user
 		where user_id = #{userId} and user_pw = #{userPw}
 	</select>
-	
+
 	<select id="getRefreshToken" parameterType="string" resultType="string">
 		select token
 		from user
 		where user_id = #{userId}
 	</select>
-	
+
 	<update id="saveRefreshToken" parameterType="map">
 		update user
 		set token = #{token}
 		where user_id = #{userId}
 	</update>
-	
+
 	<update id="deleteRefreshToken" parameterType="map">
 		update user
 		set token = #{token, jdbcType=VARCHAR}

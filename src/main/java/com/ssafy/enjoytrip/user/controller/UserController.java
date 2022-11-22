@@ -159,6 +159,7 @@ public class UserController {
 		HttpStatus status = null;
 		try {
 			UserDto loginUser = userService.login(userDto);
+			logger.debug("loginUser => {}", loginUser.toString());
 			if (loginUser != null) {
 				String accessToken = jwtService.createAccessToken("userId", loginUser.getUserId());// key, data
 				String refreshToken = jwtService.createRefreshToken("userId", loginUser.getUserId());// key, data
@@ -186,7 +187,6 @@ public class UserController {
 	@GetMapping("/info/{userId}")
 	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("userId") String userId,
 			HttpServletRequest request) {
-		logger.debug("info > userId : {}", userId);
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.UNAUTHORIZED;
 		if (jwtService.checkToken(request.getHeader("access-token"))) {
