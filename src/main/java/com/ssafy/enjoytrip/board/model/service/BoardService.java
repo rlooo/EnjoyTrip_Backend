@@ -11,6 +11,8 @@ public interface BoardService {
 	void writeBoard(BoardDto boardDto) throws Exception;
 
 	List<BoardDto> getBoardList(Map<String, Object> map) throws Exception;
+	
+	List<BoardDto> getBoardListByUserId(String userId) throws Exception;
 
 	BoardDto getBoard(int articleNo) throws Exception;
 
