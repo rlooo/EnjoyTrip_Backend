@@ -22,4 +22,6 @@ public interface ContentService {
     void writePlan(PlanDto planDto) throws Exception;
 
     List<PlanDto> getPlanList() throws Exception;
+
+    List<PlanDto> getUserPlanList(String userId) throws Exception;
 }

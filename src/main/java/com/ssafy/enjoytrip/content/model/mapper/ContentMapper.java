@@ -28,4 +28,6 @@ public interface ContentMapper {
     void writePlanPlace(PlanDto planDto) throws SQLException;
 
     List<PlanDto> getPlanList() throws SQLException;
+
+    List<PlanDto> getUserPlanList(String userId) throws SQLException;
 }

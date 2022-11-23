@@ -57,4 +57,9 @@ public class ContentServiceImpl implements ContentService {
         return contentMapper.getPlanList();
     }
 
+    @Override
+    public List<PlanDto> getUserPlanList(String userId) throws Exception {
+        return contentMapper.getUserPlanList(userId);
+    }
+
 }

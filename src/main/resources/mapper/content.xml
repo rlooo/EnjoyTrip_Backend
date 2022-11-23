@@ -86,4 +86,10 @@
         select article_no, user_id, title, startDate, endDate, register_date, hit
         from plan
     </select>
+
+    <select id="getUserPlanList" parameterType="String" resultMap="planInfo">
+        select article_no, user_id, title, startDate, endDate, register_date, hit
+        from plan
+        where user_id = #{userId}
+    </select>
 </mapper>

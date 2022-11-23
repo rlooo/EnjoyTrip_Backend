@@ -119,6 +119,20 @@ public class ContentController {
         }
     }
 
+    @GetMapping("/plan/list/{userId}")
+    public ResponseEntity<?> getUserPlan(@PathVariable String userId) {
+        try {
+            List<PlanDto> list = contentService.getUserPlanList(userId);
+            if (list != null && !list.isEmpty()) {
+                return new ResponseEntity<List<PlanDto>>(list, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
     private ResponseEntity<String> exceptionHandling(Exception e) {
         e.printStackTrace();
         return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
