@@ -62,7 +62,6 @@ public class BoardController {
 	public ResponseEntity<?> list() {
 		logger.debug("boardList call");
 
-		Map<String, Object> response = new HashMap<String, Object>();
 		try {
 			List<BoardDto> list = boardService.getBoardList(null);
 
@@ -79,6 +78,27 @@ public class BoardController {
 		}
 
 	}
+	@GetMapping(value = "/{userId}")
+	public ResponseEntity<?> listByUserId(@PathVariable("userId") String userId) {
+		logger.debug("boardListById call: {}", userId);
+	
+		try {
+			List<BoardDto> list = boardService.getBoardListByUserId(userId);
+
+			if (list != null && !list.isEmpty()) {
+
+				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+
+	}
+	
 	@Transactional
 	@PostMapping()
 	public ResponseEntity<?> write(@Value("${file.path.upload-files}") String filePath, BoardDto boardDto, @RequestParam("upfile") MultipartFile[] files) {
@@ -123,7 +143,7 @@ public class BoardController {
 	}
 
 	@Transactional
-	@GetMapping(value = "/{articleno}")
+	@GetMapping(value = "/view/{articleno}")
 	public ResponseEntity<?> view(@PathVariable("articleno") int articleNo) throws Exception {
 		logger.debug("boardView articleNo : {}", articleNo);
 		try {
