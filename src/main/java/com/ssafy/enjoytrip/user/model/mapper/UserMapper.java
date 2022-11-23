@@ -42,4 +42,6 @@ public interface UserMapper {
     public Object getRefreshToken(String userId) throws SQLException;
 
     public void deleteRefreshToken(Map<String, String> map) throws SQLException;
+
+	public String findPwByEmail(String email) throws SQLException;
 }

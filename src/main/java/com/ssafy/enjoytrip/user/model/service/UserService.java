@@ -34,4 +34,6 @@ public interface UserService {
     public void deleRefreshToken(String userId) throws Exception;
     
     List<UserFileInfoDto> fileInfoList (String userId) throws Exception;
+
+	String findPwByEmail(String email) throws Exception;
 }

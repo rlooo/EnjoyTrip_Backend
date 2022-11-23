@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.user.model.service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +106,12 @@ public class UserServiceImpl implements UserService {
 		userMapper.deleteImg(userDto.getUserId());
 		userMapper.modifyUser(userDto);
 		userMapper.registerFile(userDto);
+		
+	}
+
+	@Override
+	public String findPwByEmail(String email) throws Exception {
+		return userMapper.findPwByEmail(email);
 		
 	}
 

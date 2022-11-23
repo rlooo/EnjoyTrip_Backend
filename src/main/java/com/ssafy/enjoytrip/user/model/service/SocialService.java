@@ -44,7 +44,7 @@ public class SocialService {
 		
 		try {
 			JsonNode jsonNode = objectMapper.readTree(userInfo); // json 형태로 바꿔줌
-			String email = String.valueOf(jsonNode.get("kakao_account").get("email"));
+			String email = String.valueOf(jsonNode.get("kakao_account").get("email")).replaceAll("\"", "");
 			
 
 			String[] emails = String.valueOf(jsonNode.get("kakao_account").get("email")).split("@");

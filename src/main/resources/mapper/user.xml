@@ -136,4 +136,10 @@
 		set token = #{token, jdbcType=VARCHAR}
 		where user_id = #{userId}
 	</update>
+	
+	<select id ="findPwByEmail" parameterType="String" resultType="String">
+	select user_pw
+	from user
+	where email=#{email}
+	</select>
 </mapper>

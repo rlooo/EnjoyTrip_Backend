@@ -35,6 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ssafy.enjoytrip.user.model.UserFileInfoDto;
 import com.ssafy.enjoytrip.user.model.UserDto;
 import com.ssafy.enjoytrip.user.model.service.JwtServiceImpl;
+import com.ssafy.enjoytrip.user.model.service.MailService;
+import com.ssafy.enjoytrip.user.model.service.MailServiceImpl;
 import com.ssafy.enjoytrip.user.model.service.UserService;
 
 @RestController
@@ -47,6 +49,9 @@ public class UserController {
 
 	@Autowired
 	private JwtServiceImpl jwtService;
+	
+	@Autowired
+	private MailServiceImpl mailService;
 
 	private UserService userService;
 
@@ -273,6 +278,19 @@ public class UserController {
 			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	// 비밀번호 찾기 이메일 인증
+	@PostMapping("/confirm")
+	String mailConfirm(@RequestBody String email) throws Exception{
+		String code =mailService.sendSimpleMessage(email);
+		return code;
+	}
+	
+	@GetMapping("/find/pw/{email}")
+	String findPwByEmail(@PathVariable("email") String email) throws Exception {
+		String pw = userService.findPwByEmail(email);
+		return pw;
 	}
 
 }
