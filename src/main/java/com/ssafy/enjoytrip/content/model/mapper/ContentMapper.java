@@ -26,4 +26,6 @@ public interface ContentMapper {
     void writePlan(PlanDto planDto) throws SQLException;
 
     void writePlanPlace(PlanDto planDto) throws SQLException;
+
+    List<PlanDto> getPlanList() throws SQLException;
 }

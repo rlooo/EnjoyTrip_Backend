@@ -20,4 +20,6 @@ public interface ContentService {
     List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception;
 
     void writePlan(PlanDto planDto) throws Exception;
+
+    List<PlanDto> getPlanList() throws Exception;
 }

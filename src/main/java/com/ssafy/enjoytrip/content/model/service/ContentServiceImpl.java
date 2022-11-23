@@ -52,4 +52,9 @@ public class ContentServiceImpl implements ContentService {
         contentMapper.writePlanPlace(planDto);
     }
 
+    @Override
+    public List<PlanDto> getPlanList() throws Exception {
+        return contentMapper.getPlanList();
+    }
+
 }
