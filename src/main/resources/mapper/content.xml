@@ -27,6 +27,15 @@
         <result column="zipcode" property="zipCode" />
     </resultMap>
 
+    <resultMap id="planInfo" type="planDto">
+        <result column="article_no" property="articleNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="register_date" property="registerDate"/>
+    </resultMap>
+
     <select id="getAreaCode" resultMap="area">
         select *
         from area
@@ -58,18 +67,23 @@
     </select>
 
     <insert id="writePlan" parameterType="planDto">
-        insert into plan (user_id, title, hit, register_date)
-        values (#{userId}, #{title}, 0, now())
+        insert into plan (user_id, title, startDate, endDate, hit, register_date)
+        values (#{userId}, #{title}, #{startDate}, #{endDate}, 0, now())
         <selectKey resultType="int" keyProperty="articleNo" order="AFTER">
             select last_insert_id()
         </selectKey>
     </insert>
 
     <insert id="writePlanPlace" parameterType="planDto">
-        insert into plan_place_info (article_no, content_id, memo)
+        insert into plan_place_info (article_no, content_id, plan_date, memo)
         values
         <foreach collection="contentList" item="content" separator=" , ">
-            (#{articleNo}, #{content.contentId}, #{content.memo})
+            (#{articleNo}, #{content.contentId}, #{content.planDate}, #{content.memo})
         </foreach>
     </insert>
+
+    <select id="getPlanList" resultMap="planInfo">
+        select article_no, user_id, title, startDate, endDate, register_date, hit
+        from plan
+    </select>
 </mapper>

@@ -98,9 +98,22 @@ public class ContentController {
     @PostMapping("/plan/write")
     public ResponseEntity<?> writePlan(@RequestBody PlanDto planDto) {
         try {
-            planDto.setUserId("ssafy1");
             contentService.writePlan(planDto);
             return new ResponseEntity<Void>(HttpStatus.OK);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @GetMapping("/plan/list")
+    public ResponseEntity<?> getPlan() {
+        try {
+            List<PlanDto> list = contentService.getPlanList();
+            if (list != null && !list.isEmpty()) {
+                return new ResponseEntity<List<PlanDto>>(list, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
         } catch (Exception e) {
             return exceptionHandling(e);
         }

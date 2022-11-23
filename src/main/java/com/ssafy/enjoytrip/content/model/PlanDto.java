@@ -6,6 +6,9 @@ public class PlanDto {
     private int articleNo;
     private String userId;
     private String title;
+    private String startDate;
+    private String endDate;
+    private String registerDate;
     private List<PlanPlaceDto> contentList;
 
     public int getArticleNo() {
@@ -30,6 +33,30 @@ public class PlanDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(String registerDate) {
+        this.registerDate = registerDate;
     }
 
     public List<PlanPlaceDto> getContentList() {
