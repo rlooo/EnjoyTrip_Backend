@@ -1,7 +1,9 @@
 package com.ssafy.enjoytrip.user.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.enjoytrip.user.model.UserDto;
+import com.ssafy.enjoytrip.user.model.service.JwtServiceImpl;
 import com.ssafy.enjoytrip.user.model.service.KakaoService;
 import com.ssafy.enjoytrip.user.model.service.SocialService;
 import com.ssafy.enjoytrip.user.model.service.UserService;
@@ -30,57 +33,56 @@ import com.ssafy.enjoytrip.user.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-//@RequiredArgsConstructor
 @RequestMapping("/user")
 public class SocialController {
 	private final Logger logger = LoggerFactory.getLogger(SocialController.class);
-
+	private static final String SUCCESS = "success";
+	private static final String FAIL = "fail";
+	
 	private final SocialService socialService;
 	private final UserService userService;
 	// private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final Environment env;
+	
+	@Autowired
+	private JwtServiceImpl jwtService;
 
 	@Autowired
 	public SocialController(SocialService socialService, UserService userService, Environment env) {
 		this.socialService = socialService;
 		this.userService = userService;
-		// this.bCryptPasswordEncoder=bCryptPasswordEncoder;
 		this.env = env;
 	}
 
 	@GetMapping("/oauth/login/kakao")
-	public ResponseEntity socialLogin(@RequestParam("code") String code, HttpServletResponse response)
-			throws Exception {
-		System.out.println(code);
-		UserDto loginUser = socialService.verificationKakao(code);
-		System.out.println(loginUser.getUserName());
-		UserDto user = null;
+	public ResponseEntity<Map<String, Object>> socialLogin(@RequestParam("code") String code,
+			HttpServletResponse response) throws Exception {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status = null;
 		try {
-			user = userService.getUser(loginUser.getEmail());
+			UserDto loginUser = socialService.verificationKakao(code);
+			logger.debug("loginUser => {}", loginUser.toString());
+			if (loginUser != null) {
+				String accessToken = jwtService.createAccessToken("userId", loginUser.getUserId());// key, data
+				String refreshToken = jwtService.createRefreshToken("userId", loginUser.getUserId());// key, data
+				userService.saveRefreshToken(loginUser.getUserId(), refreshToken);
+				logger.debug("로그인 accessToken 정보 : {}", accessToken);
+				logger.debug("로그인 refreshToken 정보 : {}", refreshToken);
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				resultMap.put("message", SUCCESS);
+				status = HttpStatus.ACCEPTED;
+			} else {
+				resultMap.put("message", FAIL);
+				status = HttpStatus.ACCEPTED;
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(loginUser.toString());
-		// 서비스에 등록된 회원이 아니라면
-		if (user == null) {
-
-			loginUser.setUserPw((UUID.randomUUID().toString()));
-
-			// 회원가입
-			userService.registUser(loginUser);
-
+			logger.error("로그인 실패 : {}", e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
-		System.out.println(env.getProperty("token.expiration_time"));
-		// JWT 토큰 생성
-		String token = JWT.create().withSubject("JwtToken")
-				.withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 2)) // 파기일
-				.withClaim("emailId", loginUser.getEmail()).sign(Algorithm.HMAC512("enjoytrip"));
-		System.out.println(token);
-		// JWT 토큰 헤더에 담아 전달
-		response.addHeader("JWT", token);
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 
-		return new ResponseEntity(HttpStatus.OK);
 	}
 }

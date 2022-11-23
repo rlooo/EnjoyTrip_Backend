@@ -1,8 +1,15 @@
 package com.ssafy.enjoytrip.user.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,41 +26,55 @@ import lombok.RequiredArgsConstructor;
 @Service
 //@RequiredArgsConstructor
 public class SocialService {
+	private static final Logger logger = LoggerFactory.getLogger(SocialService.class);
 
-    private final KakaoService kakaoService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	private KakaoService kakaoService;
 
-    @Autowired
-    public SocialService(KakaoService kakaoService) {
-        this.kakaoService = kakaoService;
-    }
+	@Autowired
+	private UserService userService;
 
-    public UserDto verificationKakao(String code) {
+	private ObjectMapper objectMapper = new ObjectMapper();
 
-        UserDto userDto = new UserDto();
-        // 코드를 이용하여 accessToken 추출
-        String accessToken = kakaoService.getAccessTokenByCode(code);
-        // accessToken을 이용하여 사용자 정보 추출
-        String userInfo = kakaoService.getUserInfoByAccessToken(accessToken);
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(userInfo); // json 형태로 바꿔줌
-            String email = String.valueOf(jsonNode.get("kakao_account").get("email"));
+	public UserDto verificationKakao(String code) {
 
-            String[] emails = String.valueOf(jsonNode.get("kakao_account").get("email")).split("@");
-            String emailId = emails[0].replaceAll("\"", "");
+		String accessToken = kakaoService.getAccessTokenByCode(code);
+		String userInfo = kakaoService.getUserInfoByAccessToken(accessToken);
+		
+		try {
+			JsonNode jsonNode = objectMapper.readTree(userInfo); // json 형태로 바꿔줌
+			String email = String.valueOf(jsonNode.get("kakao_account").get("email"));
+			
 
-            userDto.setEmail(email);
+			String[] emails = String.valueOf(jsonNode.get("kakao_account").get("email")).split("@");
+			String emailId = emails[0].replaceAll("\"", "");
+			String name = String.valueOf(jsonNode.get("kakao_account").get("profile").get("nickname"));
+			
+			UserDto userDto = new UserDto();
+			userDto.setEmail(email);
+			userDto.setUserName(name.substring(1, name.length() - 1));
+			userDto.setUserId(emailId);
 
-            String name = String.valueOf(jsonNode.get("kakao_account").get("profile").get("nickname"));
-            userDto.setUserName(name.substring(1, name.length() - 1));
+			UserDto loginUser = userService.getUser(userDto.getUserId());
+			
+			if (loginUser == null) {// 서비스에 등록된 회원이 아니라면
+				userDto.setUserPw((UUID.randomUUID().toString()));
 
-            userDto.setUserId(emailId);
+				// 회원가입
+				userService.registUser(userDto);
+				
+				return userDto;
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+			}
+			else {
+				return loginUser;
+			}
 
-        return userDto;
-    }
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

@@ -33,7 +33,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registUser(UserDto userDto) throws Exception {
         userMapper.registUser(userDto);
-        userMapper.registerFile(userDto);
+        if(userDto.getFileInfos()!=null) {
+        	userMapper.registerFile(userDto);
+        }
     }
 
     @Override

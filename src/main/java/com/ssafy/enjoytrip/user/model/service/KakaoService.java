@@ -1,5 +1,8 @@
 package com.ssafy.enjoytrip.user.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +35,7 @@ public class KakaoService {
 	    LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>(); // 파라미터 설정
 	    params.add("grant_type", "authorization_code");
 	    params.add("client_id", "af3cf7912cfcd3399b542b15ce6d6032");
-	    params.add("redirect_uri", "http://localhost:8080/user/oauth/login/kakao");
+	    params.add("redirect_uri", "http://localhost:8080");
 	    params.add("code", code);
 	    params.add("client_secret", "98nyxszNAhnR94b7QcGGqa8g5P7DLaWQ"); 
 
@@ -41,14 +44,14 @@ public class KakaoService {
 	    String url = "https://kauth.kakao.com/oauth/token"; //요청 보낼 url
 
 	    ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class); // 응답 받아옴
-
 	    try {
-	        return objectMapper.readValue(response.getBody(), OAuthTokenDto.class).getAccess_token(); // 응답에서 accessToken만 반환
+	        return objectMapper.readValue(response.getBody(), OAuthTokenDto.class).getAccess_token();
 	    } catch (JsonProcessingException e) {
 	        e.printStackTrace();
 	    }
 	    return null;
 	}
+
 	public String getUserInfoByAccessToken(String accessToken) {
 
 	    HttpHeaders headers = new HttpHeaders(); // 요청 헤더
