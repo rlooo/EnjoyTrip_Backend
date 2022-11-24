@@ -34,6 +34,7 @@
         <result column="startDate" property="startDate" />
         <result column="endDate" property="endDate" />
         <result column="register_date" property="registerDate" />
+        <result column="hit" property="hit" />
     </resultMap>
 
     <resultMap id="planPlaceInfo" type="planPlaceDto">
@@ -113,4 +114,22 @@
         from place_info
         where content_id = #{contentId}
     </select>
+
+    <update id="updateHit" parameterType="int">
+        update plan
+        set hit = hit + 1
+        where article_no = #{articleNo}
+    </update>
+
+    <delete id="deletePlan" parameterType="int">
+        delete from plan
+        where article_no = #{articleNo}
+    </delete>
+
+    <delete id="deletePlanPlace" parameterType="int">
+        delete from plan_place_info
+        where article_no = #{articleNo}
+    </delete>
+
+
 </mapper>

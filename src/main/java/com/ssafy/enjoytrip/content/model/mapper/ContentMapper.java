@@ -35,4 +35,10 @@ public interface ContentMapper {
     List<PlanPlaceDto> getPlanPlaceList(int articleNo) throws SQLException;
 
     PlaceDto getPlaceItem(int contentId) throws SQLException;
+
+    void updateHit(int articleNo) throws SQLException;
+
+    void deletePlan(int articleNo) throws SQLException;
+
+    void deletePlanPlace(int articleNo) throws SQLException;
 }

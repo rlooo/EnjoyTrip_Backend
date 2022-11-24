@@ -9,6 +9,7 @@ public class PlanDto {
     private String startDate;
     private String endDate;
     private String registerDate;
+    private int hit;
     private List<PlanPlaceDto> contentList;
 
     public int getArticleNo() {
@@ -57,6 +58,14 @@ public class PlanDto {
 
     public void setRegisterDate(String registerDate) {
         this.registerDate = registerDate;
+    }
+
+    public int getHit() {
+        return hit;
+    }
+
+    public void setHit(int hit) {
+        this.hit = hit;
     }
 
     public List<PlanPlaceDto> getContentList() {

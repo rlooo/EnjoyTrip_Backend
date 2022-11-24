@@ -81,4 +81,15 @@ public class ContentServiceImpl implements ContentService {
         return resultMap;
     }
 
+    @Override
+    public void deletePlan(int articleNo) throws Exception {
+        contentMapper.deletePlanPlace(articleNo);
+        contentMapper.deletePlan(articleNo);
+    }
+
+    @Override
+    public void updateHit(int articleNo) throws Exception {
+        contentMapper.updateHit(articleNo);
+    }
+
 }

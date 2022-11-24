@@ -26,4 +26,8 @@ public interface ContentService {
     List<PlanDto> getUserPlanList(String userId) throws Exception;
 
     Map<String, List<?>> getPlanPlace(int articleNo) throws Exception;
+
+    void updateHit(int articleNo) throws Exception;
+
+    void deletePlan(int articleNo) throws Exception;
 }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -152,6 +153,22 @@ public class ContentController {
     public ResponseEntity<?> getPlanView(
             @PathVariable("articleNo") int articleNo) {
         try {
+            Map<String, List<?>> map = contentService.getPlanPlace(articleNo);
+            contentService.updateHit(articleNo);
+            if (map.get("planItems") != null && !map.get("planItems").isEmpty()) {
+                return new ResponseEntity<Map<String, List<?>>>(map, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @DeleteMapping("/plan/{articleNo}")
+    public ResponseEntity<?> planDelete(@PathVariable("articleNo") int articleNo) {
+        try {
+            contentService.deletePlan(articleNo);
             Map<String, List<?>> map = contentService.getPlanPlace(articleNo);
             if (map.get("planItems") != null && !map.get("planItems").isEmpty()) {
                 return new ResponseEntity<Map<String, List<?>>>(map, HttpStatus.OK);
