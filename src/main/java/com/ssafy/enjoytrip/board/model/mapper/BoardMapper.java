@@ -34,4 +34,6 @@ public interface BoardMapper {
     int getTotalArticleCount(Map<String, Object> map) throws SQLException;
     
     List<BoardFileInfoDto> fileInfoList(int articleNo) throws Exception;
+    
+    List<BoardDto> getBoardListOrderByHit() throws SQLException;
 }

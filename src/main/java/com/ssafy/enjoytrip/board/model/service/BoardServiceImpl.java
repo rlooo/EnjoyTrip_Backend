@@ -45,6 +45,18 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	public List<BoardDto> getBoardListOrderByHit() throws Exception {
+		List<BoardDto> list =  boardMapper.getBoardListOrderByHit();
+		
+		for(int i=0;i<list.size();i++) {
+			List<BoardFileInfoDto> fileInfos =  boardMapper.fileInfoList(list.get(i).getArticleNo());
+			list.get(i).setFileInfos(fileInfos);
+			
+		}
+		return list;
+	}
+	
+	@Override
 	public List<BoardDto> getBoardListByUserId(String userId) throws Exception {
 		List<BoardDto> list =  boardMapper.getBoardListByUserId(userId);
 		

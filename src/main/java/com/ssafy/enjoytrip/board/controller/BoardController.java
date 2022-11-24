@@ -78,6 +78,28 @@ public class BoardController {
 		}
 
 	}
+	
+	@GetMapping(value="/list/orderbyhit")
+	public ResponseEntity<?> listOrderByHit() {
+		logger.debug("boardListOrderByHit call");
+
+		try {
+			List<BoardDto> list = boardService.getBoardListOrderByHit();
+
+			if (list != null && !list.isEmpty()) {
+
+				return new ResponseEntity<List<BoardDto>>(list, HttpStatus.OK);
+
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+
+	}
+	
 	@GetMapping(value = "/{userId}")
 	public ResponseEntity<?> listByUserId(@PathVariable("userId") String userId) {
 		logger.debug("boardListById call: {}", userId);

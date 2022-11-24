@@ -22,4 +22,5 @@ public interface BoardService {
 	void deleteBoard(int articleNo) throws Exception;
 	void updateHit(int articleNo) throws Exception;
 	List<BoardFileInfoDto> fileInfoList(int articleNo) throws Exception;
+	public List<BoardDto> getBoardListOrderByHit() throws Exception;
 }

@@ -126,6 +126,12 @@
 		from board_img_file_info
 		where article_no = #{articleNo}
 	</select>
+	
+	<select id="getBoardListOrderByHit" resultMap="board">
+	select * from board
+	order by hit desc
+	limit 5
+	</select>
 
 
 </mapper>
