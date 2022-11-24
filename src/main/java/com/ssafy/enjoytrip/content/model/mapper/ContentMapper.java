@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.ssafy.enjoytrip.content.model.AreaDto;
 import com.ssafy.enjoytrip.content.model.PlaceDto;
 import com.ssafy.enjoytrip.content.model.PlanDto;
+import com.ssafy.enjoytrip.content.model.PlanPlaceDto;
 import com.ssafy.enjoytrip.content.model.SigunguDto;
 
 @Mapper
@@ -19,7 +20,7 @@ public interface ContentMapper {
 
     List<PlaceDto> getPlaceInfo(Map<String, Object> map) throws SQLException;
 
-    List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws SQLException;
+    List<PlaceDto> getRandomPlaceInfo() throws SQLException;
 
     List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws SQLException;
 
@@ -30,4 +31,8 @@ public interface ContentMapper {
     List<PlanDto> getPlanList() throws SQLException;
 
     List<PlanDto> getUserPlanList(String userId) throws SQLException;
+
+    List<PlanPlaceDto> getPlanPlaceList(int articleNo) throws SQLException;
+
+    PlaceDto getPlaceItem(int contentId) throws SQLException;
 }

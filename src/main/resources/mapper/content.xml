@@ -28,12 +28,19 @@
     </resultMap>
 
     <resultMap id="planInfo" type="planDto">
-        <result column="article_no" property="articleNo"/>
-        <result column="user_id" property="userId"/>
-        <result column="title" property="title"/>
-        <result column="startDate" property="startDate"/>
-        <result column="endDate" property="endDate"/>
-        <result column="register_date" property="registerDate"/>
+        <result column="article_no" property="articleNo" />
+        <result column="user_id" property="userId" />
+        <result column="title" property="title" />
+        <result column="startDate" property="startDate" />
+        <result column="endDate" property="endDate" />
+        <result column="register_date" property="registerDate" />
+    </resultMap>
+
+    <resultMap id="planPlaceInfo" type="planPlaceDto">
+        <result column="article_no" property="articleNo" />
+        <result column="content_id" property="contentId" />
+        <result column="plan_date" property="planDate" />
+        <result column="memo" property="memo" />
     </resultMap>
 
     <select id="getAreaCode" resultMap="area">
@@ -54,9 +61,11 @@
         and map_x between 124 and 132 and map_y between 33 and 40
     </select>
 
-    <select id="getRandomPlaceInfo" parameterType="map" resultMap="placeInfo">
+    <select id="getRandomPlaceInfo" resultMap="placeInfo">
         select *
         from place_info
+        order by rand()
+        limit 10
     </select>
 
     <select id="getSearchPlaceInfo" parameterType="map" resultMap="placeInfo">
@@ -91,5 +100,17 @@
         select article_no, user_id, title, startDate, endDate, register_date, hit
         from plan
         where user_id = #{userId}
+    </select>
+
+    <select id="getPlanPlaceList" parameterType="int" resultMap="planPlaceInfo">
+        select article_no, content_id, plan_date, memo
+        from plan_place_info
+        where article_no = #{articleNo}
+    </select>
+
+    <select id="getPlaceItem" parameterType="int" resultMap="placeInfo">
+        select *
+        from place_info
+        where content_id = #{contentId}
     </select>
 </mapper>

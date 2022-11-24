@@ -15,7 +15,7 @@ public interface ContentService {
 
     List<PlaceDto> getPlaceInfo(Map<String, Object> map) throws Exception;
 
-    List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws Exception;
+    List<PlaceDto> getRandomPlaceInfo() throws Exception;
 
     List<PlaceDto> getSearchPlaceInfo(Map<String, Object> map) throws Exception;
 
@@ -24,4 +24,6 @@ public interface ContentService {
     List<PlanDto> getPlanList() throws Exception;
 
     List<PlanDto> getUserPlanList(String userId) throws Exception;
+
+    Map<String, List<?>> getPlanPlace(int articleNo) throws Exception;
 }

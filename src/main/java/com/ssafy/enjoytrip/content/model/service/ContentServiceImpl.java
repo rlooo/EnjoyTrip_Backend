@@ -1,5 +1,7 @@
 package com.ssafy.enjoytrip.content.model.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.enjoytrip.content.model.AreaDto;
 import com.ssafy.enjoytrip.content.model.PlaceDto;
 import com.ssafy.enjoytrip.content.model.PlanDto;
+import com.ssafy.enjoytrip.content.model.PlanPlaceDto;
 import com.ssafy.enjoytrip.content.model.SigunguDto;
 import com.ssafy.enjoytrip.content.model.mapper.ContentMapper;
 
@@ -37,8 +40,8 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public List<PlaceDto> getRandomPlaceInfo(Map<String, Object> map) throws Exception {
-        return contentMapper.getRandomPlaceInfo(map);
+    public List<PlaceDto> getRandomPlaceInfo() throws Exception {
+        return contentMapper.getRandomPlaceInfo();
     }
 
     @Override
@@ -60,6 +63,22 @@ public class ContentServiceImpl implements ContentService {
     @Override
     public List<PlanDto> getUserPlanList(String userId) throws Exception {
         return contentMapper.getUserPlanList(userId);
+    }
+
+    @Override
+    public Map<String, List<?>> getPlanPlace(int articleNo) throws Exception {
+        Map<String, List<?>> resultMap = new HashMap<String, List<?>>();
+        List<PlanPlaceDto> planPlaceList = contentMapper.getPlanPlaceList(articleNo);
+
+        List<PlaceDto> placeList = new ArrayList<>();
+        for (PlanPlaceDto planItem : planPlaceList) {
+            placeList.add(contentMapper.getPlaceItem(planItem.getContentId()));
+        }
+
+        resultMap.put("planItems", planPlaceList);
+        resultMap.put("placeList", placeList);
+
+        return resultMap;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.content.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +96,20 @@ public class ContentController {
         }
     }
 
+    @GetMapping("/place/random")
+    public ResponseEntity<?> getRandomPlace() {
+        try {
+            List<PlaceDto> list = contentService.getRandomPlaceInfo();
+            if (list != null && !list.isEmpty()) {
+                return new ResponseEntity<List<PlaceDto>>(list, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
     @PostMapping("/plan/write")
     public ResponseEntity<?> writePlan(@RequestBody PlanDto planDto) {
         try {
@@ -120,11 +135,26 @@ public class ContentController {
     }
 
     @GetMapping("/plan/list/{userId}")
-    public ResponseEntity<?> getUserPlan(@PathVariable String userId) {
+    public ResponseEntity<?> getUserPlanList(@PathVariable String userId) {
         try {
             List<PlanDto> list = contentService.getUserPlanList(userId);
             if (list != null && !list.isEmpty()) {
                 return new ResponseEntity<List<PlanDto>>(list, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
+
+    @GetMapping("/plan/view/{articleNo}")
+    public ResponseEntity<?> getPlanView(
+            @PathVariable("articleNo") int articleNo) {
+        try {
+            Map<String, List<?>> map = contentService.getPlanPlace(articleNo);
+            if (map.get("planItems") != null && !map.get("planItems").isEmpty()) {
+                return new ResponseEntity<Map<String, List<?>>>(map, HttpStatus.OK);
             } else {
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }
