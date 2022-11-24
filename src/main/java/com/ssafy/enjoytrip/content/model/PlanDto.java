@@ -9,8 +9,8 @@ public class PlanDto {
     private String startDate;
     private String endDate;
     private String registerDate;
-    private int hit;
     private List<PlanPlaceDto> contentList;
+    private int hit;
 
     public int getArticleNo() {
         return articleNo;
