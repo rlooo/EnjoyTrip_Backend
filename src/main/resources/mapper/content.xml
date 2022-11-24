@@ -65,6 +65,7 @@
     <select id="getRandomPlaceInfo" resultMap="placeInfo">
         select *
         from place_info
+        where map_x between 124 and 132 and map_y between 33 and 40
         order by rand()
         limit 10
     </select>
